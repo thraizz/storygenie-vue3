@@ -35,7 +35,7 @@ const cta = {
           </router-link>
         </div>
         <router-link
-          v-if="$route.path !== cta.path"
+          v-if="selectedProduct && $route.path !== cta.path"
           :to="cta.path"
           class="mt-1 flex h-min items-center gap-1 self-start rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500"
         >
