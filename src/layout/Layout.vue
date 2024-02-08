@@ -8,7 +8,7 @@ import { computed } from "vue";
 const selectedProduct = useSelectedProduct();
 const creationPath = computed(() => `/${selectedProduct.value}/story/new`);
 const cta = {
-  path: creationPath.value,
+  path: creationPath,
   text: "Create Story",
 };
 </script>
@@ -35,7 +35,7 @@ const cta = {
           </router-link>
         </div>
         <router-link
-          v-if="selectedProduct && $route.path !== cta.path"
+          v-if="selectedProduct && $route.path !== cta.path.value"
           :to="cta.path"
           class="mt-1 flex h-min items-center gap-1 self-start rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500"
         >
