@@ -12,12 +12,12 @@ import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { useUser } from "@/stores/user";
-import { ProductWithId } from "@/types/product";
+import { TemplateWithId } from "@/types/templates";
 
-const ITEM_PATH = "products";
+const ITEM_PATH = "templates";
 
-export const useProducts = defineStore(ITEM_PATH, () => {
-  const items = ref<ProductWithId[]>([]);
+export const useTemplates = defineStore(ITEM_PATH, () => {
+  const items = ref<TemplateWithId[]>([]);
   const userStore = useUser();
 
   const selectedItem = useSelectedProduct();
@@ -45,13 +45,13 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     const itemsList = (await itemsSnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }))) as ProductWithId[];
+    }))) as TemplateWithId[];
 
     items.value = itemsList;
   };
   useRefetchOnAuthChange(fetchItems);
 
-  const setAttributeOfItem = async (item: ProductWithId, text: string) => {
+  const setAttributeOfItem = async (item: TemplateWithId, text: string) => {
     if (uuid.value === undefined) return;
 
     await updateDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), {
@@ -60,7 +60,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     fetchItems();
   };
 
-  const putItem = async (item: ProductWithId) => {
+  const putItem = async (item: TemplateWithId) => {
     if (uuid.value === undefined) return;
 
     await setDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), item);

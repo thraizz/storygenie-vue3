@@ -40,6 +40,14 @@ export const router = createRouter({
       },
     },
     {
+      path: "/templates",
+      component: () => import("./views/templates/Templates.vue"),
+      meta: {
+        title: "Templates",
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/:productId",
       meta: {
         requiresAuth: true,

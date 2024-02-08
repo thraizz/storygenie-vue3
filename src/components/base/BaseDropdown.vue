@@ -23,9 +23,7 @@ withDefaults(
   },
 );
 
-const selectedOption = defineModel<T>({
-  required: true,
-});
+const selectedOption = defineModel<T>();
 
 const calculateLinkItemStyle = (active: boolean, selected: boolean) => {
   if (active) {

@@ -34,13 +34,14 @@ const cta = {
             <ArrowLeftIcon class="size-4" /> Back
           </router-link>
         </div>
-        <router-link
-          v-if="selectedProduct && $route.path !== cta.path.value"
-          :to="cta.path"
-          class="mt-1 flex h-min items-center gap-1 self-start rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500"
-        >
-          {{ cta.text }}
-        </router-link>
+        <slot name="cta">
+          <router-link
+            :to="cta.path.value"
+            class="flex h-min items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500 hover:bg-opacity-75"
+          >
+            {{ cta.text }}
+          </router-link>
+        </slot>
       </header>
     </div>
 

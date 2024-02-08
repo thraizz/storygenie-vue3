@@ -14,15 +14,14 @@ const productStore = useProducts();
 
 const appNavigation = [
   {
-    name: "Home",
+    name: "Products",
     href: "/",
   },
   {
-    name: "Create Story",
-    href: "/story/new",
+    name: "Templates",
+    href: "/templates",
   },
 ];
-const selectedProduct = useSelectedProduct();
 </script>
 
 <template>
@@ -41,7 +40,13 @@ const selectedProduct = useSelectedProduct();
             class="flex items-center gap-2 px-2 text-lg font-semibold tracking-tight text-white hover:text-indigo-200 lg:px-0"
             >Storygenie</router-link
           >
-          <p class="text-white">{{ selectedProduct }}</p>
+          <router-link
+            v-for="item in appNavigation"
+            class="hidden font-semibold text-white lg:block"
+            :key="item.href"
+            :to="item.href"
+            >{{ item.name }}</router-link
+          >
         </div>
 
         <ProductDropdown v-if="productStore.selectedItem" />
