@@ -7,6 +7,5 @@ storyStore.fetchItems();
 </script>
 
 <template>
-  Your Stories
   <StoryList :items="storyStore.items" />
 </template>

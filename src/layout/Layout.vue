@@ -4,13 +4,24 @@ import { ArrowLeftIcon } from "@heroicons/vue/20/solid";
 import TopBar from "@/components/TopBar.vue";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 const selectedProduct = useSelectedProduct();
-const creationPath = computed(() => `/${selectedProduct.value}/story/new`);
-const cta = {
-  path: creationPath,
-  text: "Create Story",
-};
+const route = useRoute();
+const cta = computed(() => {
+  if (route?.path === "/templates") {
+    return {
+      path: "/templates/new",
+      text: "Create Template",
+    };
+  }
+  if (route?.meta.showStoryCreation) {
+    return {
+      path: `/${selectedProduct.value}/story/new`,
+      text: "Create Story",
+    };
+  }
+});
 </script>
 
 <template>
@@ -34,14 +45,13 @@ const cta = {
             <ArrowLeftIcon class="size-4" /> Back
           </router-link>
         </div>
-        <slot name="cta">
-          <router-link
-            :to="cta.path.value"
-            class="flex h-min items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500 hover:bg-opacity-75"
-          >
-            {{ cta.text }}
-          </router-link>
-        </slot>
+        <router-link
+          v-if="cta"
+          :to="cta.path"
+          class="flex h-min items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500 hover:bg-opacity-75"
+        >
+          {{ cta.text }}
+        </router-link>
       </header>
     </div>
 

@@ -51,6 +51,7 @@ export const router = createRouter({
       path: "/:productId",
       meta: {
         requiresAuth: true,
+        showStoryCreation: true,
       },
       children: [
         {
@@ -83,6 +84,7 @@ export const router = createRouter({
           path: "story/new",
           component: () => import("./views/stories/CreateStory.vue"),
           meta: {
+            showStoryCreation: false,
             title: "Create Story",
             showBack: true,
             showProductPicker: true,
