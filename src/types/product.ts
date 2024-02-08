@@ -3,13 +3,10 @@ import { Timestamp } from "firebase/firestore";
 export type Product = {
   id: string;
   createdAt: Timestamp;
-  updatedAt: string;
-  deletedAt: string;
-  userID: string;
+  updatedAt?: Timestamp;
   name: string;
   description: string;
-  isExample: boolean;
-  jiraProjectId: string;
+  jiraProjectId?: string;
 };
 
 export type ProductWithId = Product & { id: string };

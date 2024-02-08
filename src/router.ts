@@ -34,10 +34,14 @@ export const router = createRouter({
       meta: {
         title: "Settings",
         showBack: true,
+        requiresAuth: true,
       },
     },
     {
       path: "/:productId",
+      meta: {
+        requiresAuth: true,
+      },
       children: [
         {
           path: "",
@@ -82,7 +86,10 @@ export const router = createRouter({
 const protectedRoutes: string[] = [];
 router.beforeEach((to, from, next) => {
   const { isLoggedIn } = useUser();
-  if (protectedRoutes.includes(to.path) && !isLoggedIn) {
+  if (
+    (to.meta.requiresAuth || protectedRoutes.includes(to.path)) &&
+    !isLoggedIn
+  ) {
     next("/login");
   } else {
     next();
