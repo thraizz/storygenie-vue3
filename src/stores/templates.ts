@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   doc,
   getDocs,
@@ -12,7 +13,7 @@ import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { useUser } from "@/stores/user";
-import { TemplateWithId } from "@/types/templates";
+import { Template, TemplateWithId } from "@/types/templates";
 
 const ITEM_PATH = "templates";
 
@@ -67,9 +68,17 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
     fetchItems();
   };
 
+  const postItem = async (item: Template) => {
+    if (uuid.value === undefined) return;
+
+    await addDoc(collection(db, "userdata", uuid.value, ITEM_PATH), item);
+    await fetchItems();
+  };
+
   return {
     setAttributeOfItem,
     putItem,
+    postItem,
     items,
     fetchItems,
     selectedItem,

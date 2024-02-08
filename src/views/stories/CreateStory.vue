@@ -40,7 +40,6 @@ const onSubmit = handleSubmit(
   // Success
   async (values: FormData) => {
     // handle form submission here
-    console.log(values.description);
     const uid = await user?.getIdToken();
     const templateId = values.template.id;
     var addMessage = httpsCallable(functions, "generateStory");
@@ -50,7 +49,7 @@ const onSubmit = handleSubmit(
       templateId: templateId,
       description: values.description,
     })
-      .then((result) => {
+      .then((result: any) => {
         console.log("Story created successfully.");
         router.push(`/${selectedProduct.value}/story/${result.data?.result}`);
       })
@@ -66,8 +65,6 @@ const onSubmit = handleSubmit(
 </script>
 
 <template>
-  Here goes the story creation.
-
   <form class="flex flex-col gap-4" @submit="onSubmit">
     <div>
       <Field name="template" v-slot="{ value, handleChange }">
