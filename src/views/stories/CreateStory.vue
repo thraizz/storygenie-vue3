@@ -1,39 +1,95 @@
 <script setup lang="ts">
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
-import { Field, useForm } from "vee-validate";
+import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { functions } from "@/firebase";
+import { router } from "@/router";
+import { useTemplates } from "@/stores/templates";
+import { useUser } from "@/stores/user";
+import { Template, TemplateWithId } from "@/types/templates";
+import { httpsCallable } from "firebase/functions";
+import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
-import { string } from "yup";
+import { object, string } from "yup";
 
 const formSchema = {
-  description: string().required().min(60),
+  template: object()
+    .shape({
+      id: string(),
+      name: string().required(
+        "Please select a template to create your story with.",
+      ),
+      description: string(),
+    })
+    .required("Please select a template."),
+  description: string()
+    .required("Please enter a description for the story.")
+    .min(10, "Description must be at least 10 characters."),
 };
+type FormData = {
+  description: string;
+  template: TemplateWithId;
+};
+const { handleSubmit } = useForm<FormData>({ validationSchema: formSchema });
 
-const {} = useForm({ validationSchema: formSchema });
-const templates = [
-  { id: 1, name: "Template 1" },
-  { id: 2, name: "Template 2" },
-  { id: 3, name: "Template 3" },
-];
+const templateStore = useTemplates();
+templateStore.fetchItems();
+const { user } = useUser();
+const selectedProduct = useSelectedProduct();
 
-const selectedTemplate = ref<{ id: number; name: string }>();
+const onSubmit = handleSubmit(
+  // Success
+  async (values: FormData) => {
+    // handle form submission here
+    console.log(values.description);
+    const uid = await user?.getIdToken();
+    const templateId = values.template.id;
+    var addMessage = httpsCallable(functions, "generateStory");
+    addMessage({
+      uid,
+      productId: selectedProduct.value,
+      templateId: templateId,
+      description: values.description,
+    })
+      .then((result) => {
+        console.log("Story created successfully.");
+        router.push(`/${selectedProduct.value}/story/${result.data?.result}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+  // Failure
+  (errors) => {
+    console.log(errors);
+  },
+);
 </script>
 
 <template>
   Here goes the story creation.
 
-  <div class="flex flex-col gap-4">
-    <BaseDropdown
-      :options="templates"
-      :displayValue="(item) => item.name"
-      label="Select a template"
-      v-model="selectedTemplate"
-    />
+  <form class="flex flex-col gap-4" @submit="onSubmit">
+    <div>
+      <Field name="template" v-slot="{ value, handleChange }">
+        <BaseDropdown
+          :options="templateStore.items"
+          :displayValue="(item) => item.name"
+          label="Select a template"
+          :modelValue="value"
+          @update:modelValue="(value: TemplateWithId) => handleChange(value)"
+        />
+        <ErrorMessage name="template" class="error text-sm" />
+      </Field>
+    </div>
     <label
       class="text-base font-semibold leading-normal text-zinc-800"
       for="description"
     >
       Description
       <Field name="description" as="textarea" class="input" />
+      <ErrorMessage name="description" class="error text-sm" />
     </label>
-  </div>
+
+    <button type="submit" class="button primary">Create</button>
+  </form>
 </template>
