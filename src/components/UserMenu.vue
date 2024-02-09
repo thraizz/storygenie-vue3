@@ -61,13 +61,13 @@ const userStore = useUser();
               :key="item.name"
               v-slot="{ active }"
             >
-              <a
-                :href="item.href"
+              <router-link
+                :to="item.href"
                 :class="[
                   active ? 'bg-gray-100' : '',
                   'block px-4 py-2 text-sm text-gray-700',
                 ]"
-                >{{ item.name }}</a
+                >{{ item.name }}</router-link
               >
             </MenuItem>
 
