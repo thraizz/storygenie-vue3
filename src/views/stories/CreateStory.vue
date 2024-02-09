@@ -5,7 +5,7 @@ import { functions } from "@/firebase";
 import { router } from "@/router";
 import { useTemplates } from "@/stores/templates";
 import { useUser } from "@/stores/user";
-import { Template, TemplateWithId } from "@/types/templates";
+import { TemplateWithId } from "@/types/templates";
 import { httpsCallable } from "firebase/functions";
 import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
@@ -36,9 +36,11 @@ templateStore.fetchItems();
 const { user } = useUser();
 const selectedProduct = useSelectedProduct();
 
+const isLoading = ref(false);
 const onSubmit = handleSubmit(
   // Success
   async (values: FormData) => {
+    isLoading.value = true;
     // handle form submission here
     const uid = await user?.getIdToken();
     const templateId = values.template.id;
@@ -56,6 +58,7 @@ const onSubmit = handleSubmit(
       .catch((error) => {
         console.error(error);
       });
+    isLoading.value = false;
   },
   // Failure
   (errors) => {
@@ -66,6 +69,15 @@ const onSubmit = handleSubmit(
 
 <template>
   <form class="flex flex-col gap-4" @submit="onSubmit">
+    <h3 class="text-lg leading-normal text-zinc-800">
+      Create a new story based on a template
+    </h3>
+    <p class="text-md font-normal text-zinc-800">
+      Select a template to create a story with. You can choose from a list of
+      predefined templates. The template will define the structure and focus of
+      the generated story. The description will be used to describe the idea of
+      your story. It should be short and precise, with all details included.
+    </p>
     <div>
       <Field name="template" v-slot="{ value, handleChange }">
         <BaseDropdown
@@ -75,18 +87,26 @@ const onSubmit = handleSubmit(
           :modelValue="value"
           @update:modelValue="(value: TemplateWithId) => handleChange(value)"
         />
-        <ErrorMessage name="template" class="error text-sm" />
+        <ErrorMessage name="template" class="error" />
       </Field>
     </div>
-    <label
-      class="text-base font-semibold leading-normal text-zinc-800"
-      for="description"
-    >
+    <label class="label" for="description">
       Description
-      <Field name="description" as="textarea" class="input" />
-      <ErrorMessage name="description" class="error text-sm" />
+      <Field
+        placeholder="Describe the idea of your story here."
+        name="description"
+        as="textarea"
+        class="input"
+      />
+      <ErrorMessage name="description" class="error" />
     </label>
 
-    <button type="submit" class="button primary">Create</button>
+    <button
+      class="button primary"
+      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"
+      type="submit"
+    >
+      Create
+    </button>
   </form>
 </template>

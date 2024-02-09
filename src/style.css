@@ -41,6 +41,9 @@
   }
 
   .error {
-    @apply text-red-600;
+    @apply text-sm text-red-600;
+  }
+  .label {
+    @apply text-base font-semibold leading-normal text-zinc-800;
   }
 }

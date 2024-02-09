@@ -45,20 +45,20 @@ const calculateLinkItemStyle = (active: boolean, selected: boolean) => {
   >
     <ListboxLabel
       v-if="label"
-      class="text-base font-semibold leading-normal"
+      class="label"
       :class="disabled ? 'text-text-200' : 'text-zinc-800'"
     >
       {{ label }}
     </ListboxLabel>
 
-    <div class="relative mt-2">
+    <div class="relative">
       <ListboxButton
-        class="flex w-full items-center justify-start gap-2 self-stretch border border-gray-400 bg-white px-3 py-2"
+        class="flex w-full items-center justify-start gap-2 self-stretch border border-gray-400 bg-white px-3 py-2 text-sm"
         :class="disabled && 'bg-text-50 text-text-300'"
       >
         <span v-if="selectedOption"> {{ displayValue(selectedOption) }} </span>
 
-        <span v-else class="text-text-500 font-normal">{{ placeholder }}</span>
+        <span v-else class="font-normal text-zinc-500">{{ placeholder }}</span>
 
         <div
           class="absolute inset-y-0 right-0 flex items-center px-2 transition-transform"

@@ -17,6 +17,14 @@ export const router = createRouter({
       },
     },
     {
+      path: "/new",
+      component: () => import("./views/product/ProductCreation.vue"),
+      meta: {
+        title: "Create Product",
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/login",
       component: () => import("./views/auth/Login.vue"),
       meta: {

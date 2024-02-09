@@ -15,6 +15,12 @@ const cta = computed(() => {
       text: "Create Template",
     };
   }
+  if (route?.path === "/") {
+    return {
+      path: `/new`,
+      text: "Create Product",
+    };
+  }
   if (route?.meta.showStoryCreation) {
     return {
       path: `/${selectedProduct.value}/story/new`,
