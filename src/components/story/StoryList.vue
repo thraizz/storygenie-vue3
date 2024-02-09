@@ -1,35 +1,12 @@
 <script setup lang="ts">
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
-import { useStories } from "@/stores/stories";
-import { Story, StoryWithId } from "@/types/story";
-import { faker } from "@faker-js/faker";
+import { StoryWithId } from "@/types/story";
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
-import { Timestamp } from "firebase/firestore";
 
 defineProps<{
   items: StoryWithId[];
 }>();
 
-const storyStore = useStories();
-
-const addRandomStory = () => {
-  const story: Story = {
-    headline:
-      faker.commerce.productName() +
-      " should be " +
-      faker.commerce.productAdjective(),
-    userStory: faker.lorem.paragraph(),
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    acceptanceCriteria: [
-      faker.lorem.sentence(),
-      faker.lorem.sentence(),
-      faker.lorem.sentence(),
-    ],
-  };
-
-  storyStore.createItem(story);
-};
 const selectedProduct = useSelectedProduct();
 </script>
 <template>
@@ -58,9 +35,4 @@ const selectedProduct = useSelectedProduct();
       </div>
     </li>
   </ul>
-  <div class="flex justify-end p-4">
-    <button class="button primary" @click="() => addRandomStory()">
-      Add random story
-    </button>
-  </div>
 </template>
