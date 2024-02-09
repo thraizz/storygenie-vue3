@@ -3,11 +3,10 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { UserCircleIcon } from "@heroicons/vue/20/solid";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
+import ProductDropdown from "@/components/product/ProductDropdown.vue";
+import { useProducts } from "@/stores/products";
 import { signOut, userNavigation, useUser } from "@/stores/user";
 import UserMenu from "./UserMenu.vue";
-import ProductDropdown from "./ProductDropdown.vue";
-import { useProducts } from "@/stores/products";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
 
 const userStore = useUser();
 const productStore = useProducts();

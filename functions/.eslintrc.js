@@ -4,25 +4,22 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "google",
-    "plugin:@typescript-eslint/recommended",
-  ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
-    sourceType: "module",
-  },
-  ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
-  ],
-  plugins: ["@typescript-eslint", "import"],
+  extends: ["eslint:recommended", "google"],
   rules: {
-    quotes: ["error", "double"],
-    "import/no-unresolved": 0,
+    quotes: [
+      "error",
+      "double",
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: true,
+      },
+    ],
+    indent: ["error", 2],
+    "object-curly-spacing": ["error", "always"],
+    "quote-props": ["error", "as-needed"],
+    "max-len": "off",
+  },
+  parserOptions: {
+    ecmaVersion: "latest",
   },
 };

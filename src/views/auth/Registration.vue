@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useField, useForm } from "vee-validate";
 import { watch } from "vue";
 import { useRouter } from "vue-router";

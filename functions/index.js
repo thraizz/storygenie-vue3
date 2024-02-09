@@ -1,17 +1,16 @@
-import * as admin from "firebase-admin";
-import { getFirestore } from "firebase-admin/firestore";
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
 
-import { HttpsError, onCall } from "firebase-functions/v2/https";
-
-import OpenAI from "openai";
+const admin = require("firebase-admin");
+const { FieldValue, getFirestore } = require("firebase-admin/firestore");
+const OpenAI = require("openai");
 
 admin.initializeApp();
 
-export const generateStory = onCall(async (request) => {
-  console.log("Got request!");
-  console.log(request.data);
+exports.generatestory = onCall(async (request) => {
+  console.log("generatestory called");
+  console.log(process.env.OPENAI_API_KEY);
   // Get the accessing users uid
-  const uid = request.auth?.uid;
+  const uid = request.auth.uid;
   if (!uid) {
     throw new HttpsError("unauthenticated", "User must be authenticated");
   }
@@ -24,6 +23,7 @@ export const generateStory = onCall(async (request) => {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
+  console.log("initialized openai");
 
   const product = await getFirestore()
     .collection("userdata")
@@ -31,7 +31,6 @@ export const generateStory = onCall(async (request) => {
     .collection("products")
     .doc(productId)
     .get();
-  console.log("Product: ", product.data());
   if (!product || !product.exists) {
     throw new HttpsError("not-found", "Product not found");
   }
@@ -48,7 +47,7 @@ export const generateStory = onCall(async (request) => {
   }
 
   const res = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-4-turbo-preview",
     messages: [
       {
         role: "system",
@@ -70,17 +69,13 @@ export const generateStory = onCall(async (request) => {
     frequency_penalty: 0,
     presence_penalty: 0,
   });
+  console.log("res", res);
 
   if (!res.choices[0].message.content) {
     throw new HttpsError("internal", "OpenAI did not return a response");
   }
 
-  type Story = {
-    headline: string;
-    acceptanceCriteria: string[];
-    userStory: string;
-  };
-  let jsonParsed: Story | undefined = undefined;
+  let jsonParsed = undefined;
   try {
     jsonParsed = JSON.parse(res.choices[0].message.content);
   } catch (e) {
@@ -94,6 +89,7 @@ export const generateStory = onCall(async (request) => {
   ) {
     throw new HttpsError("internal", "OpenAI did not return valid JSON");
   }
+  console.log("jsonParsed", jsonParsed);
 
   const writeResult = await getFirestore()
     .collection("userdata")
@@ -103,8 +99,8 @@ export const generateStory = onCall(async (request) => {
     .collection("stories")
     .add({
       ...jsonParsed,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
-  return { result: `Message with ID: ${writeResult.id} added.` };
+  return { result: writeResult.id };
 });

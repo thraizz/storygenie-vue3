@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ProductCard from "@/components/ProductCard.vue";
+import ProductCard from "@/components/product/ProductCard.vue";
 import { useProducts } from "@/stores/products";
 import { useStories } from "@/stores/stories";
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import BaseDropdown from "@/components/base/BaseDropdown.vue";
+import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { useProducts } from "@/stores/products";
 import { ProductWithId } from "@/types/product";
-import BaseDropdown from "./base/BaseDropdown.vue";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
-import { useRouter } from "vue-router";
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 
 const productStore = useProducts();
 productStore.fetchItems();

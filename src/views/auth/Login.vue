@@ -4,8 +4,8 @@ import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { string } from "yup";
 
-import { logInWithFirebase, useUser } from "@/stores/user";
 import GoogleSSO from "@/components/GoogleSSO.vue";
+import { logInWithFirebase, useUser } from "@/stores/user";
 const router = useRouter();
 
 type FormData = {

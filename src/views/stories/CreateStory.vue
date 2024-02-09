@@ -44,7 +44,7 @@ const onSubmit = handleSubmit(
     // handle form submission here
     const uid = await user?.getIdToken();
     const templateId = values.template.id;
-    var addMessage = httpsCallable(functions, "generateStory");
+    var addMessage = httpsCallable(functions, "generatestory");
     addMessage({
       uid,
       productId: selectedProduct.value,
