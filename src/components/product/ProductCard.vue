@@ -24,7 +24,7 @@ defineProps({
     <div
       class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6"
     >
-      <div class="text-sm font-medium leading-6 text-gray-900">
+      <div class="text-md font-semibold leading-6 text-gray-900">
         {{ item.name }}
       </div>
       <Menu as="div" class="relative ml-auto">
