@@ -1,5 +1,7 @@
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 
+const functions = require("firebase-functions");
+
 const admin = require("firebase-admin");
 const { FieldValue, getFirestore } = require("firebase-admin/firestore");
 const OpenAI = require("openai");
@@ -103,4 +105,35 @@ exports.generatestory = onCall(async (request) => {
     });
 
   return { result: writeResult.id };
+});
+
+exports.addusers = functions.auth.user().onCreate(async (user) => {
+  const templates = [
+    {
+      description: "Add a new feature to the application.",
+      name: "New Feature",
+    },
+    {
+      description: "The bug should be fixed.",
+      name: "Bugfix",
+    },
+    {
+      description: "General todos for this bigger task should be outlined.",
+      name: "Epic",
+    },
+  ];
+
+  // Add the user to the userdata collection
+  await getFirestore().collection("userdata").doc(user.uid).set({});
+
+  // Build all promises
+  const promises = templates.map((template) =>
+    getFirestore()
+      .collection("userdata")
+      .doc(user.uid)
+      .collection("templates")
+      .add(template),
+  );
+  // Execute all promises
+  await Promise.all(promises);
 });
