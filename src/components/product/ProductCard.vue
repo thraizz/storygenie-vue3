@@ -70,6 +70,12 @@ defineProps({
       </Menu>
     </div>
     <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+      <!-- Description -->
+      <div class="py-3">
+        <dt class="text-gray-500">Description</dt>
+        <dd class="text-gray-700">{{ item.description }}</dd>
+      </div>
+      <!-- Creation data -->
       <div class="flex justify-between gap-x-4 py-3">
         <dt class="text-gray-500">Creation date</dt>
         <dd class="text-gray-700">
@@ -78,6 +84,7 @@ defineProps({
           }}</time>
         </dd>
       </div>
+      <!-- Connected to -->
       <div class="flex justify-between gap-x-4 py-3">
         <dt class="text-gray-500">Connected to</dt>
         <dd class="flex items-start gap-x-2">
