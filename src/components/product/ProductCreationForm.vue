@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProducts } from "@/stores/products";
 import { Timestamp } from "firebase/firestore";
-import { useForm } from "vee-validate";
+import { Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { object, string } from "yup";
