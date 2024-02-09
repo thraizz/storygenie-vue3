@@ -7,7 +7,7 @@ import {
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import { app } from "@/firebase";
+import { app, auth } from "@/firebase";
 
 export const userNavigation = [{ name: "Settings", href: "/settings" }];
 
@@ -41,6 +41,7 @@ export const logInWithFirebase: (
 };
 
 export const signOut = async () => {
-  const auth = getAuth(app);
-  await auth.signOut();
+  auth.signOut().then(() => {
+    window.location.assign("/login");
+  });
 };
