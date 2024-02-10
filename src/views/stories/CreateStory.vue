@@ -6,6 +6,7 @@ import { router } from "@/router";
 import { useTemplates } from "@/stores/templates";
 import { useUser } from "@/stores/user";
 import { TemplateWithId } from "@/types/templates";
+import { PhCircleNotch } from "@phosphor-icons/vue";
 import { httpsCallable } from "firebase/functions";
 import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
@@ -29,7 +30,9 @@ type FormData = {
   description: string;
   template: TemplateWithId;
 };
-const { handleSubmit } = useForm<FormData>({ validationSchema: formSchema });
+const { handleSubmit } = useForm<FormData>({
+  validationSchema: formSchema,
+});
 
 const templateStore = useTemplates();
 templateStore.fetchItems();
@@ -54,11 +57,12 @@ const onSubmit = handleSubmit(
       .then((result: any) => {
         console.log("Story created successfully.");
         router.push(`/${selectedProduct.value}/story/${result.data?.result}`);
+        isLoading.value = false;
       })
       .catch((error) => {
         console.error(error);
+        isLoading.value = false;
       });
-    isLoading.value = false;
   },
   // Failure
   (errors) => {
@@ -68,7 +72,7 @@ const onSubmit = handleSubmit(
 </script>
 
 <template>
-  <form class="flex flex-col gap-4" @submit="onSubmit">
+  <form :disabled="isLoading" class="flex flex-col gap-4" @submit="onSubmit">
     <h3 class="text-lg leading-normal text-zinc-800">
       Create a new story based on a template
     </h3>
@@ -102,11 +106,16 @@ const onSubmit = handleSubmit(
     </label>
 
     <button
-      class="button primary"
-      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"
+      class="button primary relative"
+      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-80']"
       type="submit"
+      :disabled="isLoading"
     >
-      Create
+      <div v-if="isLoading" class="flex gap-1">
+        <PhCircleNotch class="left-0 h-5 w-5 animate-spin self-center" />
+        Generating story...
+      </div>
+      <div v-else>Create</div>
     </button>
   </form>
 </template>
