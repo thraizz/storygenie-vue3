@@ -91,7 +91,52 @@ exports.generatestory = onCall(async (request) => {
   ) {
     throw new HttpsError("internal", "OpenAI did not return valid JSON");
   }
-  console.log("jsonParsed", jsonParsed);
+  const storyAsTipTapDoc = {
+    type: "doc",
+    content: [
+      {
+        type: "heading",
+        attrs: { level: 1 },
+        content: [
+          {
+            type: "text",
+            text: jsonParsed.headline,
+          },
+        ],
+      },
+      {
+        type: "heading",
+        attrs: { level: 2 },
+        content: [{ type: "text", text: "User Story" }],
+      },
+      {
+        type: "paragraph",
+        content: [{ type: "text", text: jsonParsed.userStory }],
+      },
+      {
+        type: "heading",
+        attrs: { level: 2 },
+        content: [
+          {
+            type: "text",
+            text: "Acceptance Criteria",
+          },
+        ],
+      },
+      {
+        type: "taskList",
+        content: jsonParsed.acceptanceCriteria.map((ac) => ({
+          type: "taskItem",
+          attrs: {
+            checked: false,
+          },
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: ac }] },
+          ],
+        })),
+      },
+    ],
+  };
 
   const writeResult = await getFirestore()
     .collection("userdata")
@@ -100,7 +145,7 @@ exports.generatestory = onCall(async (request) => {
     .doc(productId)
     .collection("stories")
     .add({
-      ...jsonParsed,
+      content: storyAsTipTapDoc,
       updatedAt: FieldValue.serverTimestamp(),
     });
 

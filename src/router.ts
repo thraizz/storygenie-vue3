@@ -89,15 +89,6 @@ export const router = createRouter({
           },
         },
         {
-          path: "story/:id/edit",
-          component: () => import("./views/stories/EditStory.vue"),
-          meta: {
-            title: "Edit Story",
-            showBack: true,
-            showProductPicker: true,
-          },
-        },
-        {
           path: "story/new",
           component: () => import("./views/stories/CreateStory.vue"),
           meta: {
