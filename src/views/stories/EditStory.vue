@@ -30,86 +30,91 @@ const editor = useEditor({
 
 <template>
   <h1>Edit Story</h1>
-  <div class="editor">
-    <div v-if="editor" class="editor-menu">
-      <button
-        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
-      >
-        <span class="sr-only">h1</span>
-        <PhTextHOne class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
-      >
-        <span class="sr-only">h2</span>
-        <PhTextHTwo class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
-      >
-        <span class="sr-only">h3</span>
-        <PhTextHThree class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleBold().run()"
-        :class="{ 'is-active': editor.isActive('bold') }"
-      >
-        <span class="sr-only">bold</span>
-        <PhTextB class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleItalic().run()"
-        :class="{ 'is-active': editor.isActive('italic') }"
-      >
-        <span class="sr-only">italic</span>
-        <PhTextItalic class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleStrike().run()"
-        :class="{ 'is-active': editor.isActive('strike') }"
-      >
-        <span class="sr-only">strike</span>
-        <PhTextStrikethrough class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleHighlight().run()"
-        :class="{ 'is-active': editor.isActive('highlight') }"
-      >
-        <span class="sr-only">highlight</span>
-        <PhHighlighterCircle class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.commands.toggleBulletList()"
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-      >
-        <span class="sr-only">bullet list</span>
-        <PhListBullets class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.commands.toggleOrderedList()"
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-      >
-        <span class="sr-only">ordered list</span>
-        <PhListNumbers class="h-5 w-5" aria-hidden="true" />
-      </button>
-      <button
-        @click="editor.chain().focus().toggleTaskList().run()"
-        :class="{ 'is-active': editor.isActive('taskList') }"
-      >
-        <span class="sr-only">task list</span>
-        <PhCheckSquare class="h-5 w-5" aria-hidden="true" />
-      </button>
+  <div v-if="editor" class="flex flex-col gap-4">
+    <div class="editor">
+      <div class="editor-menu">
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+        >
+          <span class="sr-only">h1</span>
+          <PhTextHOne class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+        >
+          <span class="sr-only">h2</span>
+          <PhTextHTwo class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+        >
+          <span class="sr-only">h3</span>
+          <PhTextHThree class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleBold().run()"
+          :class="{ 'is-active': editor.isActive('bold') }"
+        >
+          <span class="sr-only">bold</span>
+          <PhTextB class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleItalic().run()"
+          :class="{ 'is-active': editor.isActive('italic') }"
+        >
+          <span class="sr-only">italic</span>
+          <PhTextItalic class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleStrike().run()"
+          :class="{ 'is-active': editor.isActive('strike') }"
+        >
+          <span class="sr-only">strike</span>
+          <PhTextStrikethrough class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHighlight().run()"
+          :class="{ 'is-active': editor.isActive('highlight') }"
+        >
+          <span class="sr-only">highlight</span>
+          <PhHighlighterCircle class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.commands.toggleBulletList()"
+          :class="{ 'is-active': editor.isActive('bulletList') }"
+        >
+          <span class="sr-only">bullet list</span>
+          <PhListBullets class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.commands.toggleOrderedList()"
+          :class="{ 'is-active': editor.isActive('orderedList') }"
+        >
+          <span class="sr-only">ordered list</span>
+          <PhListNumbers class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <button
+          @click="editor.chain().focus().toggleTaskList().run()"
+          :class="{ 'is-active': editor.isActive('taskList') }"
+        >
+          <span class="sr-only">task list</span>
+          <PhCheckSquare class="h-5 w-5" aria-hidden="true" />
+        </button>
+      </div>
+      <editor-content :editor="editor" />
     </div>
-    <editor-content :editor="editor" />
+    <button class="button primary" @click="console.log(editor.getJSON())">
+      Log JSON
+    </button>
   </div>
 </template>
 
 <style lang="scss">
 .editor {
-  @apply relative rounded-md border-2 border-gray-100;
+  @apply gap-4 rounded-md border-2 border-gray-100;
   ul {
     display: flex;
     flex-direction: column;
@@ -121,6 +126,7 @@ const editor = useEditor({
     li {
       display: flex;
       align-items: center;
+      margin: 0 !important;
 
       > label {
         align-self: flex-start;
