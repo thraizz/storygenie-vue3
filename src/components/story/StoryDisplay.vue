@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { StoryWithId } from "@/types/story";
 import { MenuItem } from "@headlessui/vue";
 import { TrashIcon } from "@heroicons/vue/20/solid";
@@ -7,13 +8,18 @@ import BaseMenu from "../base/BaseMenu.vue";
 defineProps<{
   story: StoryWithId;
 }>();
+const selectedProduct = useSelectedProduct();
 </script>
 
 <template>
   <div class="mb-4 flex items-center justify-between">
     <h2>{{ story.headline }}</h2>
     <div class="flex items-center gap-4">
-      <button class="button primary" @click="">Edit</button>
+      <router-link
+        class="button primary"
+        :to="`/${selectedProduct}/story/${story.id}/edit/`"
+        >Edit</router-link
+      >
       <BaseMenu>
         <MenuItem v-slot="{ active }">
           <a
