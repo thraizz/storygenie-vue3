@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { StoryWithId, getHeadlineFromDoc } from "@/types/story";
+import { useStories } from "@/stores/stories";
+import { StoryWithId } from "@/types/story";
 import { MenuItem } from "@headlessui/vue";
 import { ShareIcon, TrashIcon } from "@heroicons/vue/20/solid";
 import {
@@ -42,12 +43,12 @@ const editor = useEditor({
   },
 });
 const isEditable = ref(false);
+const storyStore = useStories();
 </script>
 
 <template>
-  <div class="mb-4 flex items-center justify-between">
-    <h2>{{ getHeadlineFromDoc(story.content) }}</h2>
-    <div class="flex items-center gap-4">
+  <div class="relative mb-4 flex items-center justify-end">
+    <div class="flex items-center justify-end gap-4">
       <div v-if="editor">
         <button
           v-if="!editor.isEditable"
@@ -63,7 +64,8 @@ const isEditable = ref(false);
           v-else
           class="button primary"
           @click="
-            console.log(editor.getJSON());
+            console.log(story.id);
+            storyStore.putItem({ ...story, content: editor.getJSON() as any });
             isEditable = false;
             editor.setEditable(false);
           "
