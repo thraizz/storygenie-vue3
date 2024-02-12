@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   setDoc,
@@ -90,10 +91,26 @@ export const useStories = defineStore(ITEM_PATH, () => {
     fetchItems();
   };
 
+  const deleteStory = async (item: StoryWithId) => {
+    if (uuid.value === undefined || !selectedProduct.value) return;
+    await deleteDoc(
+      doc(
+        db,
+        "userdata",
+        uuid.value,
+        productStore.key,
+        selectedProduct.value as string,
+        ITEM_PATH,
+        item.id,
+      ),
+    );
+  };
+
   return {
     setAttributeOfItem,
     putItem,
     items,
     fetchItems,
+    deleteStory,
   };
 });
