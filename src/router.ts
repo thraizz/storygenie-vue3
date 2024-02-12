@@ -80,6 +80,15 @@ export const router = createRouter({
           },
         },
         {
+          path: "edit",
+          component: () => import("./views/product/ProductEditView.vue"),
+          meta: {
+            title: "Edit Product",
+            showBack: true,
+            requiresAuth: true,
+          },
+        },
+        {
           path: "story/:id",
           component: () => import("./views/stories/Story.vue"),
           meta: {

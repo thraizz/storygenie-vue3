@@ -1,48 +1,46 @@
 <script setup lang="ts">
 import { useProducts } from "@/stores/products";
-import { Timestamp } from "firebase/firestore";
+import { ProductWithId } from "@/types/product";
 import { Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { object, string } from "yup";
+import { ProductForm } from "./ProductCreationForm.vue";
 
-export type ProductForm = {
-  name: string;
-  description: string;
-};
-
-const productCreationForm = object({
-  name: string().required("The name is required."),
-  description: string().required("The description is required."),
-});
+const props = defineProps<{
+  product: ProductWithId;
+}>();
 
 const { handleSubmit } = useForm<ProductForm>({
-  validationSchema: productCreationForm,
+  initialValues: {
+    description: props.product.description,
+    name: props.product.name,
+  },
 });
-
-const productStore = useProducts();
 
 const isLoading = ref(false);
+const productStore = useProducts();
 const router = useRouter();
-const onSubmit = handleSubmit(async (values) => {
-  isLoading.value = true;
-  const id = await productStore.postItem({
-    ...values,
-    createdAt: Timestamp.now(),
-  });
-  router.push(`/${id}`);
-  isLoading.value = false;
-});
+const onSubmit = handleSubmit(
+  // On Success
+  async (values) => {
+    isLoading.value = true;
+    await productStore.putItem({
+      ...props.product,
+      ...values,
+    });
+    isLoading.value = false;
+    router.push("/");
+  },
+
+  // Error
+  () => {
+    console.log("error");
+  },
+);
 </script>
+
 <template>
   <form class="flex flex-col gap-4" @submit="onSubmit">
-    <h3 class="text-lg leading-normal text-zinc-800">Create a new product</h3>
-    <p class="text-md font-normal text-zinc-800">
-      Fill in the form below to create a new product. The name will be used to
-      identify the product. <br />
-      The description will be used to provide context for generating stories, so
-      be as descriptive but concise as possible.
-    </p>
     <div>
       <label class="label" for="name"
         >Name
@@ -73,7 +71,7 @@ const onSubmit = handleSubmit(async (values) => {
       :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"
       type="submit"
     >
-      Create
+      Save
     </button>
   </form>
 </template>
