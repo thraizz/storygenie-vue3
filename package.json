@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && VITE_TIMESTAMP_HASH='$(date -Iseconds)-$(git rev-parse --short HEAD)' vite build",
+    "build": "vue-tsc && VITE_TIMESTAMP_HASH=\"$(date -Iseconds)-$(git rev-parse --short HEAD)\" vite build",
     "preview": "vite preview",
     "test": "vitest --bail 0 --run --passWithNoTests",
     "lint": "eslint --ext .ts,.vue src",
