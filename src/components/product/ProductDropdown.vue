@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { useProducts } from "@/stores/products";
 import { ProductWithId } from "@/types/product";
-import { computed } from "vue";
-import { useRouter } from "vue-router";
 
 const productStore = useProducts();
 productStore.fetchItems();
@@ -16,13 +17,14 @@ const selectedOption = computed(() =>
 );
 const router = useRouter();
 </script>
+
 <template>
   <BaseDropdown
     class="min-w-60"
-    :modelValue="selectedOption"
-    @update:modelValue="(value: ProductWithId) => router.push(`/${value.id}`)"
+    :model-value="selectedOption"
     :options="productStore.items"
-    :displayValue="(item: any) => (item ? item.name : '')"
+    :display-value="(item: any) => (item ? item.name : '')"
     placeholder="Select a product"
+    @update:model-value="(value: ProductWithId) => router.push(`/${value.id}`)"
   />
 </template>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useTemplates } from "@/stores/templates";
 import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { string } from "yup";
+
+import { useTemplates } from "@/stores/templates";
 
 type FormSchema = {
   name: string;
@@ -32,6 +33,7 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
 <template>
   <form class="flex flex-col gap-4">
     <h3>Create Template</h3>
+
     <div>
       <label
         for="name"
@@ -39,8 +41,10 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
         >Name
         <Field name="name" class="input" />
       </label>
+
       <ErrorMessage name="name" class="error" />
     </div>
+
     <div>
       <label
         for="description"
@@ -49,6 +53,7 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
         <Field name="description" as="textarea" class="input" />
       </label>
     </div>
+
     <button
       :disabled="isLoading"
       type="submit"

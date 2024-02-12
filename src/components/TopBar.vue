@@ -6,6 +6,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import ProductDropdown from "@/components/product/ProductDropdown.vue";
 import { useProducts } from "@/stores/products";
 import { signOut, userNavigation, useUser } from "@/stores/user";
+
 import UserMenu from "./UserMenu.vue";
 
 const userStore = useUser();
@@ -39,10 +40,11 @@ const appNavigation = [
             class="flex items-center gap-2 px-2 text-lg font-semibold tracking-tight text-white hover:text-indigo-200 lg:px-0"
             >Storygenie</router-link
           >
+
           <router-link
             v-for="item in appNavigation"
-            class="hidden font-semibold text-white lg:block"
             :key="item.href"
+            class="hidden font-semibold text-white lg:block"
             :to="item.href"
             >{{ item.name }}</router-link
           >

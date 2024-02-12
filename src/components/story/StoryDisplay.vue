@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { router } from "@/router";
-import { useStories } from "@/stores/stories";
-import { StoryWithId } from "@/types/story";
 import { MenuItem } from "@headlessui/vue";
 import { ShareIcon, TrashIcon } from "@heroicons/vue/20/solid";
 import {
@@ -23,8 +20,11 @@ import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, generateHTML, useEditor } from "@tiptap/vue-3";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import BaseMenu from "../base/BaseMenu.vue";
-import BaseModal from "../base/BaseModal.vue";
+
+import BaseMenu from "@//components/base/BaseMenu.vue";
+import BaseModal from "@//components/base/BaseModal.vue";
+import { useStories } from "@/stores/stories";
+import { StoryWithId } from "@/types/story";
 
 const props = defineProps<{
   story: StoryWithId;
@@ -58,12 +58,13 @@ const deleteStory = () => {
 
 <template>
   <BaseModal
+    v-model="showDeletionModal"
     title="Delete Story"
     description="Are you sure you want to delete this story?"
     action="Delete"
-    v-model="showDeletionModal"
     @confirm="deleteStory"
   />
+
   <div class="relative mb-4 flex items-center justify-end">
     <div class="flex items-center justify-end gap-4">
       <div v-if="editor">
@@ -77,6 +78,7 @@ const deleteStory = () => {
         >
           Edit
         </button>
+
         <button
           v-else
           class="button primary"
@@ -90,6 +92,7 @@ const deleteStory = () => {
           Save
         </button>
       </div>
+
       <BaseMenu>
         <MenuItem v-slot="{ active }">
           <a
@@ -100,98 +103,122 @@ const deleteStory = () => {
             ]"
           >
             <ShareIcon class="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+
             <span>Share</span>
           </a>
         </MenuItem>
+
         <MenuItem v-slot="{ active }">
           <button
-            @click="showDeletionModal = true"
             :class="[
               active ? 'bg-gray-100 text-red-600' : 'text-red-500',
               'flex w-full px-4 py-2 text-sm',
             ]"
+            @click="showDeletionModal = true"
           >
             <TrashIcon class="mr-3 h-5 w-5" aria-hidden="true" />
+
             <span>Delete Story</span>
           </button>
         </MenuItem>
       </BaseMenu>
     </div>
   </div>
+
   <div v-if="editor" class="flex flex-col gap-4">
     <div class="editor">
       <div v-if="isEditable" class="editor-menu">
         <button
-          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
         >
           <span class="sr-only">h1</span>
+
           <PhTextHOne class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
         >
           <span class="sr-only">h2</span>
+
           <PhTextHTwo class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
         >
           <span class="sr-only">h3</span>
+
           <PhTextHThree class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleBold().run()"
           :class="{ 'is-active': editor.isActive('bold') }"
+          @click="editor.chain().focus().toggleBold().run()"
         >
           <span class="sr-only">bold</span>
+
           <PhTextB class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleItalic().run()"
           :class="{ 'is-active': editor.isActive('italic') }"
+          @click="editor.chain().focus().toggleItalic().run()"
         >
           <span class="sr-only">italic</span>
+
           <PhTextItalic class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleStrike().run()"
           :class="{ 'is-active': editor.isActive('strike') }"
+          @click="editor.chain().focus().toggleStrike().run()"
         >
           <span class="sr-only">strike</span>
+
           <PhTextStrikethrough class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleHighlight().run()"
           :class="{ 'is-active': editor.isActive('highlight') }"
+          @click="editor.chain().focus().toggleHighlight().run()"
         >
           <span class="sr-only">highlight</span>
+
           <PhHighlighterCircle class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.commands.toggleBulletList()"
           :class="{ 'is-active': editor.isActive('bulletList') }"
+          @click="editor.commands.toggleBulletList()"
         >
           <span class="sr-only">bullet list</span>
+
           <PhListBullets class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.commands.toggleOrderedList()"
           :class="{ 'is-active': editor.isActive('orderedList') }"
+          @click="editor.commands.toggleOrderedList()"
         >
           <span class="sr-only">ordered list</span>
+
           <PhListNumbers class="h-5 w-5" aria-hidden="true" />
         </button>
+
         <button
-          @click="editor.chain().focus().toggleTaskList().run()"
           :class="{ 'is-active': editor.isActive('taskList') }"
+          @click="editor.chain().focus().toggleTaskList().run()"
         >
           <span class="sr-only">task list</span>
+
           <PhCheckSquare class="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
+
       <EditorContent :editor="editor" />
     </div>
   </div>

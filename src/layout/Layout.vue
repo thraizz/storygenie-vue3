@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ArrowLeftIcon } from "@heroicons/vue/20/solid";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 import TopBar from "@/components/TopBar.vue";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
 
 const selectedProduct = useSelectedProduct();
 const route = useRoute();
@@ -27,6 +27,8 @@ const cta = computed(() => {
       text: "Create Story",
     };
   }
+
+  return undefined;
 });
 </script>
 
@@ -51,6 +53,7 @@ const cta = computed(() => {
             <ArrowLeftIcon class="size-4" /> Back
           </router-link>
         </div>
+
         <router-link
           v-if="cta"
           :to="cta.path"

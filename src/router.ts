@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import { auth } from "./firebase";
 import { useUser } from "./stores/user";
 import HomeVue from "./views/Home.vue";

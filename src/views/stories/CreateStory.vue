@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { PhCircleNotch } from "@phosphor-icons/vue";
+import { httpsCallable } from "firebase/functions";
+import { ErrorMessage, Field, useForm } from "vee-validate";
+import { ref } from "vue";
+import { object, string } from "yup";
+
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { functions } from "@/firebase";
@@ -6,11 +12,6 @@ import { router } from "@/router";
 import { useTemplates } from "@/stores/templates";
 import { useUser } from "@/stores/user";
 import { TemplateWithId } from "@/types/templates";
-import { PhCircleNotch } from "@phosphor-icons/vue";
-import { httpsCallable } from "firebase/functions";
-import { ErrorMessage, Field, useForm } from "vee-validate";
-import { ref } from "vue";
-import { object, string } from "yup";
 
 const formSchema = {
   template: object()
@@ -76,24 +77,28 @@ const onSubmit = handleSubmit(
     <h3 class="text-lg leading-normal text-zinc-800">
       Create a new story based on a template
     </h3>
+
     <p class="text-md font-normal text-zinc-800">
       Select a template to create a story with. You can choose from a list of
       predefined templates. The template will define the structure and focus of
       the generated story. The description will be used to describe the idea of
       your story. It should be short and precise, with all details included.
     </p>
+
     <div>
-      <Field name="template" v-slot="{ value, handleChange }">
+      <Field v-slot="{ value, handleChange }" name="template">
         <BaseDropdown
           :options="templateStore.items"
-          :displayValue="(item) => item.name"
+          :display-value="(item) => item.name"
           label="Select a template"
-          :modelValue="value"
-          @update:modelValue="(value: TemplateWithId) => handleChange(value)"
+          :model-value="value"
+          @update:model-value="(value: TemplateWithId) => handleChange(value)"
         />
+
         <ErrorMessage name="template" class="error" />
       </Field>
     </div>
+
     <label class="label" for="description">
       Description
       <Field
@@ -102,6 +107,7 @@ const onSubmit = handleSubmit(
         as="textarea"
         class="input"
       />
+
       <ErrorMessage name="description" class="error" />
     </label>
 
@@ -115,6 +121,7 @@ const onSubmit = handleSubmit(
         <PhCircleNotch class="left-0 h-5 w-5 animate-spin self-center" />
         Generating story...
       </div>
+
       <div v-else>Create</div>
     </button>
   </form>

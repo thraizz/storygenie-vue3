@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { watch } from "vue";
+
 import StoryList from "@/components/story/StoryList.vue";
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
 import { useStories } from "@/stores/stories";
-import { watch } from "vue";
 
 const storyStore = useStories();
 storyStore.fetchItems();

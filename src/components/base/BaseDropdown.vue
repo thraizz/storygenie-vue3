@@ -20,6 +20,7 @@ withDefaults(
     disabled: false,
     placeholder: "Select an option",
     displayFunction: (item: any) => item.toString(),
+    label: undefined,
   },
 );
 

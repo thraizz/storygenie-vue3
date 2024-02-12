@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import {
-  CodeBracketIcon,
-  EllipsisVerticalIcon,
-  FlagIcon,
-  StarIcon,
-} from "@heroicons/vue/20/solid";
+import { Menu, MenuButton, MenuItems } from "@headlessui/vue";
+import { EllipsisVerticalIcon } from "@heroicons/vue/20/solid";
 </script>
 
 <template>
@@ -13,6 +8,7 @@ import {
     <div>
       <MenuButton class="button outlined text-gray-400 hover:text-gray-600">
         <span class="sr-only">Open options</span>
+
         <EllipsisVerticalIcon class="h-5 w-5" aria-hidden="true" />
       </MenuButton>
     </div>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { useProducts } from "@/stores/products";
-import { ProductWithId } from "@/types/product";
-import { Field, useForm } from "vee-validate";
+import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+
+import { useProducts } from "@/stores/products";
+import { ProductWithId } from "@/types/product";
+
 import { ProductForm } from "./ProductCreationForm.vue";
 
 const props = defineProps<{
@@ -50,9 +52,11 @@ const onSubmit = handleSubmit(
           class="input"
           placeholder="Name of your product."
         />
+
         <ErrorMessage name="name" class="error" />
       </label>
     </div>
+
     <div>
       <label class="label" for="description"
         >Description
@@ -63,9 +67,11 @@ const onSubmit = handleSubmit(
           class="input"
           placeholder="Enter a long description of your Product here. The more descriptive, the better!"
         />
+
         <ErrorMessage name="description" class="error" />
       </label>
     </div>
+
     <button
       class="button primary"
       :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"

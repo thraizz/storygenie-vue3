@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import StoryDisplay from "@/components/story/StoryDisplay.vue";
-import { useStories } from "@/stores/stories";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+
+import StoryDisplay from "@/components/story/StoryDisplay.vue";
+import { useStories } from "@/stores/stories";
 
 const storyStore = useStories();
 storyStore.fetchItems();

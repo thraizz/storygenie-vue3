@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useProducts } from "@/stores/products";
-import { ProductWithId } from "@/types/product";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/20/solid";
+
+import { useProducts } from "@/stores/products";
+import { ProductWithId } from "@/types/product";
 
 const productStore = useProducts();
 productStore.fetchItems();
@@ -17,8 +18,8 @@ defineProps({
 
 <template>
   <router-link
-    :to="`/${item.id}`"
     :key="item.id"
+    :to="`/${item.id}`"
     class="overflow-hidden rounded-xl border border-gray-200 transition hover:shadow-lg"
   >
     <div
@@ -27,13 +28,16 @@ defineProps({
       <div class="text-md font-semibold leading-6 text-gray-900">
         {{ item.name }}
       </div>
+
       <Menu as="div" class="relative ml-auto">
         <MenuButton
           class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500"
         >
           <span class="sr-only">Open options</span>
+
           <EllipsisHorizontalIcon class="h-5 w-5" aria-hidden="true" />
         </MenuButton>
+
         <transition
           enter-active-class="transition ease-out duration-100"
           enter-from-class="transform opacity-0 scale-95"
@@ -55,6 +59,7 @@ defineProps({
                 >Edit<span class="sr-only">, {{ item.name }}</span></router-link
               >
             </MenuItem>
+
             <MenuItem v-slot="{ active }">
               <a
                 href="#"
@@ -69,15 +74,18 @@ defineProps({
         </transition>
       </Menu>
     </div>
+
     <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
       <!-- Description -->
       <div class="py-3">
         <dt class="text-gray-500">Description</dt>
+
         <dd class="text-gray-700">{{ item.description }}</dd>
       </div>
       <!-- Creation data -->
       <div class="flex justify-between gap-x-4 py-3">
         <dt class="text-gray-500">Creation date</dt>
+
         <dd class="text-gray-700">
           <time :datetime="item.createdAt.toString()">{{
             item.createdAt.toDate().toLocaleString()
@@ -87,6 +95,7 @@ defineProps({
       <!-- Connected to -->
       <div class="flex justify-between gap-x-4 py-3">
         <dt class="text-gray-500">Connected to</dt>
+
         <dd class="flex items-start gap-x-2">
           <div class="font-medium text-gray-900">Jira</div>
         </dd>
