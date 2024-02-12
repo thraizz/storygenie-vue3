@@ -6,6 +6,8 @@ import "./style.css";
 
 const app = createApp(App);
 
+console.log("Hash: ", import.meta.env.VITE_TIMESTAMP_HASH || "no hash");
+
 const pinia = createPinia();
 app.use(pinia);
 
