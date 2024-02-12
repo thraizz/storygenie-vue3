@@ -132,8 +132,8 @@ const appNavigation = [
           <DisclosureButton
             v-for="item in userNavigation"
             :key="item.name"
-            as="a"
-            :href="item.href"
+            as="router-link"
+            :to="item.href"
             class="navigation-item light"
             >{{ item.name }}</DisclosureButton
           >
