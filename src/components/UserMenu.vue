@@ -65,7 +65,7 @@ const userStore = useUser();
                 :to="item.href"
                 :class="[
                   active ? 'bg-gray-100' : '',
-                  'block px-4 py-2 text-sm text-gray-700',
+                  'block cursor-pointer px-4 py-2 text-sm text-gray-700',
                 ]"
                 >{{ item.name }}</router-link
               >

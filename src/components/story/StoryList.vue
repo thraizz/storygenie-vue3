@@ -2,7 +2,7 @@
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 
 import { useSelectedProduct } from "@/composables/useSelectedProduct";
-import { getHeadlineFromDoc,StoryWithId } from "@/types/story";
+import { getHeadlineFromDoc, StoryWithId } from "@/types/story";
 
 defineProps<{
   items: StoryWithId[];
@@ -29,7 +29,7 @@ const selectedProduct = useSelectedProduct();
       </p>
 
       <div class="flex shrink-0 items-center gap-x-4">
-        <router-link :to="`/story/${item.id}`">
+        <router-link :to="`/${selectedProduct}/story/${item.id}`">
           <span class="sr-only"
             >View story {{ getHeadlineFromDoc(item.content) }}</span
           >

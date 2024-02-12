@@ -134,7 +134,7 @@ const appNavigation = [
             :key="item.name"
             as="router-link"
             :to="item.href"
-            class="navigation-item light"
+            class="navigation-item light cursor-pointer"
             >{{ item.name }}</DisclosureButton
           >
 
