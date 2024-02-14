@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { string } from "yup";
 
-import { useTemplates } from "@/stores/templates";
+import { useTemplates } from "@/stores/useTemplates";
 
 type FormSchema = {
   name: string;
@@ -70,3 +70,4 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
     </button>
   </form>
 </template>
+@/stores/useTemplates

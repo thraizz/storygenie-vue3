@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 import { string } from "yup";
 
 import { auth } from "@/firebase";
-import { logInWithFirebase, useUser } from "@/stores/user";
+import { logInWithFirebase, useUser } from "@/stores/useUser";
 type FormData = {
   email: string;
   password: string;
@@ -160,3 +160,4 @@ watch(
     </div>
   </div>
 </template>
+@/stores/useUser

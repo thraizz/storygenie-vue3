@@ -9,8 +9,8 @@ import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { functions } from "@/firebase";
 import { router } from "@/router";
-import { useTemplates } from "@/stores/templates";
-import { useUser } from "@/stores/user";
+import { useTemplates } from "@/stores/useTemplates";
+import { useUser } from "@/stores/useUser";
 import { TemplateWithId } from "@/types/templates";
 
 const formSchema = {
@@ -128,3 +128,4 @@ const onSubmit = handleSubmit(
     </button>
   </form>
 </template>
+@/stores/useTemplates @/stores/useUser

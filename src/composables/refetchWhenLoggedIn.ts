@@ -1,6 +1,6 @@
 import { watch } from "vue";
 
-import { useUser } from "@/stores/user";
+import { useUser } from "@/stores/useUser";
 
 export const useRefetchOnAuthChange = (fetchItems: () => void) => {
   const userStore = useUser();

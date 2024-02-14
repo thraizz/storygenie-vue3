@@ -4,8 +4,8 @@ import { UserCircleIcon } from "@heroicons/vue/20/solid";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 import ProductDropdown from "@/components/product/ProductDropdown.vue";
-import { useProducts } from "@/stores/products";
-import { signOut, userNavigation, useUser } from "@/stores/user";
+import { useProducts } from "@/stores/useProducts";
+import { signOut, userNavigation, useUser } from "@/stores/useUser";
 
 import UserMenu from "./UserMenu.vue";
 
@@ -161,3 +161,4 @@ const appNavigation = [
   transition-timing-function: ease-in-out;
 }
 </style>
+@/stores/useProducts @/stores/useUser

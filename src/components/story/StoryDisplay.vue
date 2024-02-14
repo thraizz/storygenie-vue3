@@ -23,7 +23,7 @@ import { useRouter } from "vue-router";
 
 import BaseMenu from "@//components/base/BaseMenu.vue";
 import BaseModal from "@//components/base/BaseModal.vue";
-import { useStories } from "@/stores/stories";
+import { useStories } from "@/stores/useStories";
 import { StoryWithId } from "@/types/story";
 
 const props = defineProps<{
@@ -281,3 +281,4 @@ const deleteStory = () => {
   }
 }
 </style>
+@/stores/useStories

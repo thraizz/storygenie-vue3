@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 
 import TopBar from "@/components/TopBar.vue";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 
 const selectedProduct = useSelectedProductId();
 const productStore = useProducts();
@@ -89,3 +89,4 @@ const title = computed(() => {
     </main>
   </div>
 </template>
+@/stores/useProducts

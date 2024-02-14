@@ -12,7 +12,7 @@ import { computed, ref, watch } from "vue";
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
-import { useUser } from "@/stores/user";
+import { useUser } from "@/stores/useUser";
 import { Template, TemplateWithId } from "@/types/templates";
 
 const ITEM_PATH = "templates";

@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import StoryDisplay from "@/components/story/StoryDisplay.vue";
-import { useStories } from "@/stores/stories";
+import { useStories } from "@/stores/useStories";
 
 const storyStore = useStories();
 storyStore.fetchItems();
@@ -19,3 +19,4 @@ const story = computed(() =>
     <StoryDisplay :story="story" />
   </div>
 </template>
+@/stores/useStories

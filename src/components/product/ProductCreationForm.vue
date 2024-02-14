@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { object, string } from "yup";
 
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 
 export type ProductForm = {
   name: string;
@@ -85,3 +85,4 @@ const onSubmit = handleSubmit(async (values) => {
     </button>
   </form>
 </template>
+@/stores/useProducts

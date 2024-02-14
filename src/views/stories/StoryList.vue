@@ -3,7 +3,7 @@ import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 import { computed, watch } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { useStories } from "@/stores/stories";
+import { useStories } from "@/stores/useStories";
 import { getHeadlineFromDoc } from "@/types/story";
 const storyStore = useStories();
 storyStore.fetchItems();
@@ -49,3 +49,4 @@ const items = computed(() => storyStore.items);
     </li>
   </ul>
 </template>
+@/stores/useStories

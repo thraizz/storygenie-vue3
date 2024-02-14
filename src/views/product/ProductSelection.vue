@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ProductCard from "@/components/product/ProductCard.vue";
-import { useProducts } from "@/stores/products";
-import { useStories } from "@/stores/stories";
+import { useProducts } from "@/stores/useProducts";
+import { useStories } from "@/stores/useStories";
 
 const productStore = useProducts();
 productStore.fetchItems();
@@ -30,3 +30,4 @@ storyStore.items = [];
     Create a product by clicking the button above.
   </p>
 </template>
+@/stores/useProducts @/stores/useStories

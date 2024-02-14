@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
 const productStore = useProducts();
@@ -29,3 +29,4 @@ const router = useRouter();
     @update:model-value="(value: ProductWithId) => router.push(`/${value.id}`)"
   />
 </template>
+@/stores/useProducts

@@ -2,7 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { BellIcon, UserCircleIcon } from "@heroicons/vue/20/solid";
 
-import { signOut, userNavigation, useUser } from "@/stores/user";
+import { signOut, userNavigation, useUser } from "@/stores/useUser";
 const userStore = useUser();
 </script>
 
@@ -98,3 +98,4 @@ const userStore = useUser();
     >
   </div>
 </template>
+@/stores/useUser

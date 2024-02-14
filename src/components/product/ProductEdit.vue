@@ -3,7 +3,7 @@ import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
 import { ProductForm } from "./ProductCreationForm.vue";
@@ -81,3 +81,4 @@ const onSubmit = handleSubmit(
     </button>
   </form>
 </template>
+@/stores/useProducts

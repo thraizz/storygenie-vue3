@@ -11,10 +11,10 @@ import { computed, ref, watch } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
-import { useUser } from "@/stores/user";
+import { useUser } from "@/stores/useUser";
 import { StoryWithId } from "@/types/story";
 
-import { useProducts } from "./products";
+import { useProducts } from "./useProducts";
 
 const ITEM_PATH = "stories";
 

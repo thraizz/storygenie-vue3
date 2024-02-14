@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 import ProductEdit from "@/components/product/ProductEdit.vue";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
 const productId = useSelectedProductId();
@@ -16,3 +16,4 @@ const product = computed<ProductWithId | undefined>(() =>
 <template>
   <ProductEdit v-if="product" :product="product" />
 </template>
+@/stores/useProducts

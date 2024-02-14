@@ -2,7 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/20/solid";
 
-import { useProducts } from "@/stores/products";
+import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
 const productStore = useProducts();
@@ -103,3 +103,4 @@ defineProps({
     </dl>
   </router-link>
 </template>
+@/stores/useProducts
