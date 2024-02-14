@@ -6,7 +6,7 @@ import { ref } from "vue";
 import { object, string } from "yup";
 
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { functions } from "@/firebase";
 import { router } from "@/router";
 import { useTemplates } from "@/stores/templates";
@@ -38,7 +38,7 @@ const { handleSubmit } = useForm<FormData>({
 const templateStore = useTemplates();
 templateStore.fetchItems();
 const { user } = useUser();
-const selectedProduct = useSelectedProduct();
+const selectedProduct = useSelectedProductId();
 
 const isLoading = ref(false);
 const onSubmit = handleSubmit(
@@ -88,6 +88,7 @@ const onSubmit = handleSubmit(
     <div>
       <Field v-slot="{ value, handleChange }" name="template">
         <BaseDropdown
+          id="template"
           :options="templateStore.items"
           :display-value="(item) => item.name"
           label="Select a template"
@@ -102,6 +103,7 @@ const onSubmit = handleSubmit(
     <label class="label" for="description">
       Description
       <Field
+        id="description"
         placeholder="Describe the idea of your story here."
         name="description"
         as="textarea"

@@ -1,8 +1,8 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
-export const useSelectedProduct = () => {
+export const useSelectedProductId = () => {
   const route = useRoute();
-  
-return computed(() => route.params.productId);
+
+  return computed(() => route.params.productId);
 };

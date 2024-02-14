@@ -2,16 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { auth } from "./firebase";
 import { useUser } from "./stores/user";
-import HomeVue from "./views/Home.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/",
-      components: {
-        default: HomeVue,
-      },
+      component: () => import("./views/product/ProductSelection.vue"),
       meta: {
         title: "Home",
         requiresAuth: true,
@@ -76,9 +73,26 @@ export const router = createRouter({
           path: "",
           component: () => import("./views/stories/Stories.vue"),
           meta: {
-            title: "Stories",
             showProductPicker: true,
+            showProductAsTitle: true,
           },
+          children: [
+            {
+              path: "",
+              component: () => import("./views/stories/StoryList.vue"),
+              meta: {
+                showProductPicker: true,
+              },
+            },
+            {
+              path: "collaborators",
+              component: () => import("./views/product/Collaborators.vue"),
+            },
+            {
+              path: "settings",
+              component: () => import("./views/product/Settings.vue"),
+            },
+          ],
         },
         {
           path: "edit",

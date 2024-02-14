@@ -31,7 +31,7 @@ const onSubmit = handleSubmit(
       ...values,
     });
     isLoading.value = false;
-    router.push("/");
+    router.push(`/${props.product.id}/`);
   },
 
   // Error

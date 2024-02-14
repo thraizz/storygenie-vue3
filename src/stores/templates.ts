@@ -10,7 +10,7 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { useUser } from "@/stores/user";
 import { Template, TemplateWithId } from "@/types/templates";
@@ -21,7 +21,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
   const items = ref<TemplateWithId[]>([]);
   const userStore = useUser();
 
-  const selectedItem = useSelectedProduct();
+  const selectedItem = useSelectedProductId();
 
   const uuid = computed(() => userStore.user?.uid);
 

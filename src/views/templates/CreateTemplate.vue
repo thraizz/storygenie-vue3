@@ -14,7 +14,7 @@ type FormSchema = {
 const templateStore = useTemplates();
 const formSchema = {
   name: string().required("Name is required."),
-  description: string().required("Description is required."),
+  description: string().required("Instruction is required."),
 };
 
 const { handleSubmit } = useForm<FormSchema>({
@@ -39,7 +39,7 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
         for="name"
         class="text-base font-semibold leading-normal text-zinc-800"
         >Name
-        <Field name="name" class="input" />
+        <Field id="name" name="name" class="input" />
       </label>
 
       <ErrorMessage name="name" class="error" />
@@ -49,8 +49,13 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
       <label
         for="description"
         class="text-base font-semibold leading-normal text-zinc-800"
-        >Description
-        <Field name="description" as="textarea" class="input" />
+        >Instruction
+        <Field
+          id="description"
+          name="description"
+          as="textarea"
+          class="input"
+        />
       </label>
     </div>
 

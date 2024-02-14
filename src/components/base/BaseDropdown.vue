@@ -10,6 +10,7 @@ import { PhCaretDown, PhCheck } from "@phosphor-icons/vue";
 
 withDefaults(
   defineProps<{
+    id: string;
     options: T[];
     disabled?: boolean;
     label?: string;
@@ -47,6 +48,7 @@ const calculateLinkItemStyle = (active: boolean, selected: boolean) => {
     <ListboxLabel
       v-if="label"
       class="label"
+      :for="id"
       :class="disabled ? 'text-text-200' : 'text-zinc-800'"
     >
       {{ label }}
@@ -54,6 +56,7 @@ const calculateLinkItemStyle = (active: boolean, selected: boolean) => {
 
     <div class="relative">
       <ListboxButton
+        :id="id"
         class="flex w-full items-center justify-start gap-2 self-stretch border border-gray-400 bg-white px-3 py-2 text-sm"
         :class="disabled && 'bg-text-50 text-text-300'"
       >

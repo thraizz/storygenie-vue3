@@ -9,7 +9,7 @@ import {
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { useUser } from "@/stores/user";
 import { StoryWithId } from "@/types/story";
@@ -35,7 +35,7 @@ export const useStories = defineStore(ITEM_PATH, () => {
     },
   );
 
-  const selectedProduct = useSelectedProduct();
+  const selectedProduct = useSelectedProductId();
 
   const fetchItems = async () => {
     if (!userStore.user?.uid || !productStore.selectedItem) return;

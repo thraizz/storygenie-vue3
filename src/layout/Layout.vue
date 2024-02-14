@@ -4,9 +4,15 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import TopBar from "@/components/TopBar.vue";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
+import { useProducts } from "@/stores/products";
 
-const selectedProduct = useSelectedProduct();
+const selectedProduct = useSelectedProductId();
+const productStore = useProducts();
+const product = computed(() =>
+  productStore.getItem(selectedProduct.value.toString() || ""),
+);
+
 const route = useRoute();
 const cta = computed(() => {
   if (route?.path === "/templates") {
@@ -30,6 +36,16 @@ const cta = computed(() => {
 
   return undefined;
 });
+
+const title = computed(() => {
+  if (route.meta.title) {
+    return route.meta.title;
+  } else if (route.meta.showProductAsTitle) {
+    return product.value?.name;
+  }
+
+  return "";
+});
 </script>
 
 <template>
@@ -42,7 +58,7 @@ const cta = computed(() => {
       >
         <div class="h-20 max-w-7xl">
           <h1 class="self-center text-3xl font-bold tracking-tight text-white">
-            {{ $route.meta.title }}
+            {{ title }}
           </h1>
 
           <router-link

@@ -10,7 +10,7 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { useUser } from "@/stores/user";
 import { Product, ProductWithId } from "@/types/product";
@@ -21,7 +21,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
   const items = ref<ProductWithId[]>([]);
   const userStore = useUser();
 
-  const selectedItem = useSelectedProduct();
+  const selectedItem = useSelectedProductId();
 
   const uuid = computed(() => userStore.user?.uid);
 
@@ -80,6 +80,10 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     return doc.id;
   };
 
+  const getItem = (id: string) => {
+    return items.value.find((item) => item.id === id);
+  };
+
   return {
     setAttributeOfItem,
     putItem,
@@ -88,5 +92,6 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     fetchItems,
     selectedItem,
     key: ITEM_PATH,
+    getItem,
   };
 });

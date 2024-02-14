@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
+import { computed, watch } from "vue";
 
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
-import { getHeadlineFromDoc, StoryWithId } from "@/types/story";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
+import { useStories } from "@/stores/stories";
+import { getHeadlineFromDoc } from "@/types/story";
+const storyStore = useStories();
+storyStore.fetchItems();
 
-defineProps<{
-  items: StoryWithId[];
-}>();
+const selectedProductId = useSelectedProductId();
+watch(
+  () => selectedProductId.value,
+  () => storyStore.fetchItems(),
+);
 
-const selectedProduct = useSelectedProduct();
+const items = computed(() => storyStore.items);
 </script>
 
 <template>
@@ -23,13 +29,13 @@ const selectedProduct = useSelectedProduct();
       class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6 lg:px-8"
     >
       <p class="text-lg font-medium leading-6 text-gray-900">
-        <router-link :to="`/${selectedProduct}/story/${item.id}`">
+        <router-link :to="`/${selectedProductId}/story/${item.id}`">
           {{ getHeadlineFromDoc(item.content) }}
         </router-link>
       </p>
 
       <div class="flex shrink-0 items-center gap-x-4">
-        <router-link :to="`/${selectedProduct}/story/${item.id}`">
+        <router-link :to="`/${selectedProductId}/story/${item.id}`">
           <span class="sr-only"
             >View story {{ getHeadlineFromDoc(item.content) }}</span
           >

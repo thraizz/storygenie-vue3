@@ -3,13 +3,13 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
-import { useSelectedProduct } from "@/composables/useSelectedProduct";
+import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { useProducts } from "@/stores/products";
 import { ProductWithId } from "@/types/product";
 
 const productStore = useProducts();
 productStore.fetchItems();
-const selectedProduct = useSelectedProduct();
+const selectedProduct = useSelectedProductId();
 const selectedOption = computed(() =>
   productStore.items.find(
     (item: ProductWithId) => item.id === selectedProduct.value,
@@ -20,6 +20,7 @@ const router = useRouter();
 
 <template>
   <BaseDropdown
+    id="product-dropdown"
     class="min-w-60"
     :model-value="selectedOption"
     :options="productStore.items"
