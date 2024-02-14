@@ -86,7 +86,27 @@ export const router = createRouter({
             },
             {
               path: "collaborators",
-              component: () => import("./views/product/Collaborators.vue"),
+              children: [
+                {
+                  path: "",
+                  component: () => import("./views/product/Collaborators.vue"),
+                  meta: {
+                    title: "Collaborators",
+                    showBack: true,
+                    requiresAuth: true,
+                  },
+                },
+                {
+                  path: "invite",
+                  component: () =>
+                    import("./views/product/InviteCollaborator.vue"),
+                  meta: {
+                    title: "Invite Collaborator",
+                    showBack: true,
+                    requiresAuth: true,
+                  },
+                },
+              ],
             },
             {
               path: "settings",

@@ -13,7 +13,7 @@ const navigation = computed(() => {
     { name: "Stories", href: `${baseUrl}`, icon: PhListChecks, current: true },
     {
       name: "Collaborators",
-      href: `${baseUrl}/collaborators`,
+      href: `${baseUrl}/collaborators/`,
       icon: PhUsers,
       current: false,
     },
