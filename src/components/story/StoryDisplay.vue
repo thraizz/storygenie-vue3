@@ -59,6 +59,7 @@ const deleteStory = () => {
 <template>
   <BaseModal
     v-model="showDeletionModal"
+    type="error"
     title="Delete Story"
     description="Are you sure you want to delete this story?"
     action="Delete"

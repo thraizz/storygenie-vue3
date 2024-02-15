@@ -78,7 +78,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     <button
       class="button primary"
-      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"
+      :class="[isLoading && 'is-loading']"
       type="submit"
     >
       Create

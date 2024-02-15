@@ -63,7 +63,7 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
       :disabled="isLoading"
       type="submit"
       class="button primary"
-      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-50']"
+      :class="[isLoading && 'is-loading']"
       @click="onSubmit"
     >
       Create

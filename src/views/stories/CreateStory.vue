@@ -115,7 +115,7 @@ const onSubmit = handleSubmit(
 
     <button
       class="button primary relative"
-      :class="[isLoading && 'animate-pulse cursor-not-allowed opacity-80']"
+      :class="[isLoading && 'is-loading opacity-80']"
       type="submit"
       :disabled="isLoading"
     >

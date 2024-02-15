@@ -10,24 +10,27 @@ const navigation = computed(() => {
   const baseUrl = `/${selectedProductId.value}`;
 
   return [
-    { name: "Stories", href: `${baseUrl}`, icon: PhListChecks, current: true },
+    {
+      name: "Stories",
+      href: `${baseUrl}`,
+      icon: PhListChecks,
+      exact: true,
+    },
     {
       name: "Collaborators",
       href: `${baseUrl}/collaborators/`,
       icon: PhUsers,
-      current: false,
+      exact: false,
     },
-    // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-    // { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-    // { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
     {
       name: "Settings",
       href: `${baseUrl}/settings`,
       icon: Cog8ToothIcon,
-      current: false,
+      exact: true,
     },
   ];
 });
+const activeClass = "bg-gray-50 text-indigo-600";
 </script>
 
 <template>
@@ -37,7 +40,8 @@ const navigation = computed(() => {
         <li v-for="item in navigation" :key="item.name">
           <router-link
             :to="item.href"
-            exact-active-class="bg-gray-50 text-indigo-600"
+            :active-class="!item.exact ? activeClass : ''"
+            :exact-active-class="item.exact ? activeClass : ''"
             class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
           >
             <component

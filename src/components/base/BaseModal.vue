@@ -10,8 +10,10 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 
 defineProps<{
   title: string;
-  description: string;
+  description?: string;
   action: string;
+  type: "dialog" | "error";
+  hideButtons?: boolean;
 }>();
 const open = defineModel<boolean>();
 defineEmits(["confirm", "cancel"]);
@@ -53,6 +55,7 @@ defineEmits(["confirm", "cancel"]);
               <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                   <div
+                    v-if="type === 'error'"
                     class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
                   >
                     <ExclamationTriangleIcon
@@ -71,16 +74,26 @@ defineEmits(["confirm", "cancel"]);
                     <div class="mt-2">
                       <p class="text-sm text-gray-500">{{ description }}</p>
                     </div>
+
+                    <div v-bind="$attrs">
+                      <slot />
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div
+                v-if="!hideButtons"
                 class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
               >
                 <button
+                  class="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                   type="button"
-                  class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                  :class="
+                    type === 'error'
+                      ? 'bg-red-600 hover:bg-red-500'
+                      : 'bg-indigo-600 hover:bg-indigo-500'
+                  "
                   @click="
                     () => {
                       $emit('confirm');
