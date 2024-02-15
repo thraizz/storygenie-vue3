@@ -37,7 +37,11 @@ const open = ref(false);
     </div>
   </div>
 
-  <ul role="list" class="divide-y divide-gray-100 px-4">
+  <ul
+    v-if="collaboratorStore.items.length > 0"
+    role="list"
+    class="divide-y divide-gray-100 px-4"
+  >
     <li
       v-for="collaborator in collaboratorStore.items"
       :key="collaborator.id"
@@ -62,4 +66,6 @@ const open = ref(false);
       <CollaboratorMenu :collaborator="collaborator" />
     </li>
   </ul>
+
+  <p class="pl-5 pt-2 text-sm text-gray-500">No collaborators yet.</p>
 </template>
