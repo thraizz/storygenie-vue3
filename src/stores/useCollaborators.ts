@@ -6,6 +6,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   setDoc,
@@ -127,10 +128,28 @@ export const useCollaborators = defineStore("collaborators", () => {
     return items.value.find((item) => item.id === id);
   };
 
+  const deleteItem = async (id: string) => {
+    if (uuid.value === undefined || !productStore.selectedItem) return;
+
+    await deleteDoc(
+      doc(
+        db,
+        "userdata",
+        uuid.value,
+        productStore.key,
+        productStore.selectedItem.toString(),
+        ITEM_PATH,
+        id,
+      ),
+    );
+    fetchItems();
+  };
+
   return {
     setAttributeOfItem,
     putItem,
     postItem,
+    deleteItem,
     items,
     fetchItems,
     getItem,
