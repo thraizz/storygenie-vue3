@@ -11,6 +11,7 @@ import { computed, ref, watch } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
+import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
 import { StoryWithId } from "@/types/story";
 
@@ -41,9 +42,9 @@ export const useStories = defineStore(ITEM_PATH, () => {
     if (!userStore.user?.uid || !productStore.selectedItem) return;
     const itemsCollection = collection(
       db,
-      "userdata",
+      ROOT_USERDATA_COLLECTION,
       userStore.user.uid,
-      productStore.key,
+      productStore.collectionName,
       productStore.selectedItem.toString(),
       ITEM_PATH,
     );
@@ -59,7 +60,13 @@ export const useStories = defineStore(ITEM_PATH, () => {
   const setAttributeOfItem = async (item: StoryWithId, text: string) => {
     if (uuid.value === undefined) return;
 
-    const docRef = doc(db, "userdata", uuid.value, productStore.key, item.id);
+    const docRef = doc(
+      db,
+      ROOT_USERDATA_COLLECTION,
+      uuid.value,
+      productStore.collectionName,
+      item.id,
+    );
     await updateDoc(docRef, {
       text,
     });
@@ -67,22 +74,14 @@ export const useStories = defineStore(ITEM_PATH, () => {
   };
 
   const putItem = async (item: StoryWithId) => {
-    console.log(
-      "userdata",
-      uuid.value,
-      productStore.key,
-      selectedProduct.value,
-      ITEM_PATH,
-      item.id,
-    );
     if (uuid.value === undefined || !selectedProduct.value) return;
 
     await setDoc(
       doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         selectedProduct.value as string,
         ITEM_PATH,
         item.id,
@@ -97,9 +96,9 @@ export const useStories = defineStore(ITEM_PATH, () => {
     await deleteDoc(
       doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         selectedProduct.value as string,
         ITEM_PATH,
         item.id,

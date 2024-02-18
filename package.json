@@ -10,7 +10,7 @@
     "test": "vitest --bail 0 --run --passWithNoTests",
     "lint": "eslint --ext .ts,.vue src",
     "typecheck": "vue-tsc",
-    "emulate": "firebase emulators:start --import firebaseEmulatorData --export-on-exit",
+    "emulate": "npx firebase emulators:start --import firebaseEmulatorData --export-on-exit",
     "prepare": "husky"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "yup": "^1.3.3"
   },
   "devDependencies": {
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/vue": "^8.0.2",

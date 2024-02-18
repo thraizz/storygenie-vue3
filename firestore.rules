@@ -9,9 +9,28 @@ service cloud.firestore {
     match /userdata/public/{document=**} {
       allow read: if true;
     }
+    // Allow read/write to collaborators collection for logged in users
+    match /collaborators_invites/{document=**} {
+      allow read, write: if request.auth.uid != null;
+    }
+    match /collaborators/{document=**} {
+      allow read, write: if request.auth.uid != null;
+    }
+
     // Allow read/write for /userdata/{userID}
     match /userdata/{userID}/{document=**} {
       allow read, write: if request.auth.uid == userID;
     }
+    // Allow read and write access to product data for collaborators
+    match /userdata/{user_id}/products/{product_id} {
+      allow read, write: if request.auth.uid == user_id;
+      // allow read, write: if isCollaborator(user_id, product_id);
+    }
+
+    // Function to check if the user is a collaborator on the product
+    // function isCollaborator(user_id, product_id) {
+    //  return exists(/databases/$(database)/documents/userdata/$(user_id)/products/$(product_id)/collaborators/$(request.auth.uid));
+    //}
+
   }
 }

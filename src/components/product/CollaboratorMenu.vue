@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const collaboratorStore = useCollaborators();
 const removeCollaborator = () => {
-  collaboratorStore.deleteItem(props.collaborator.id);
+  collaboratorStore.deleteItem(props.collaborator);
 };
 const showDeletionModal = ref(false);
 </script>
@@ -66,13 +66,19 @@ const showDeletionModal = ref(false);
 
           <MenuItem v-slot="{ active }">
             <button
+              class="w-full text-left"
               :class="[
-                active ? 'bg-red-700' : '',
-                'block px-3 py-1 text-sm leading-6 text-red-600',
+                active ? 'bg-red-100 text-red-700' : 'text-red-600',
+                'block px-3 py-1 text-sm leading-6',
               ]"
               @click="showDeletionModal = true"
             >
-              Remove
+              <span v-if="collaborator.type === 'collaborator_invite'">
+                Cancel invitation
+              </span>
+
+              <span v-else>Remove</span>
+
               <span class="sr-only">, {{ collaborator.name }}</span>
             </button>
           </MenuItem>

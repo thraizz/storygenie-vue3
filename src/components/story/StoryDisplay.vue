@@ -84,7 +84,6 @@ const deleteStory = () => {
           v-else
           class="button primary"
           @click="
-            console.log(story.id);
             storyStore.putItem({ ...story, content: editor.getJSON() as any });
             isEditable = false;
             editor.setEditable(false);

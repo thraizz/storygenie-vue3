@@ -10,6 +10,13 @@ import CollaboratorModal from "./CollaboratorModal.vue";
 const collaboratorStore = useCollaborators();
 collaboratorStore.fetchItems();
 const open = ref(false);
+
+const addCollaborator = () => {
+  collaboratorStore.postItem({
+    name: "Grass Olive",
+    email: "grass.olive.342@example.com",
+  });
+};
 </script>
 
 <template>
@@ -29,7 +36,11 @@ const open = ref(false);
         </p>
       </div>
 
-      <div class="ml-4 mt-4 flex-shrink-0">
+      <div class="ml-4 mt-4 flex flex-shrink-0 gap-2">
+        <button class="button outline" @click="addCollaborator">
+          Instant add
+        </button>
+
         <button class="button primary" @click="open = true">
           Add collaborator
         </button>
@@ -55,6 +66,12 @@ const open = ref(false);
         <div class="min-w-0 flex-auto">
           <p class="text-sm font-semibold leading-6 text-gray-900">
             {{ collaborator.name }}
+            <span
+              v-if="collaborator.type === 'collaborator_invite'"
+              class="text-xs text-indigo-400"
+            >
+              (Invited)
+            </span>
           </p>
 
           <p class="mt-1 flex text-xs leading-5 text-gray-500">
@@ -67,5 +84,5 @@ const open = ref(false);
     </li>
   </ul>
 
-  <p class="pl-5 pt-2 text-sm text-gray-500">No collaborators yet.</p>
+  <p v-else class="pl-5 pt-2 text-sm text-gray-500">No collaborators yet.</p>
 </template>

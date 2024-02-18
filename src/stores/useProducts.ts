@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -12,6 +13,7 @@ import { computed, ref, watch } from "vue";
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
+import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
 import { Product, ProductWithId } from "@/types/product";
 
@@ -38,7 +40,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     if (!userStore.user?.uid) return;
     const itemsCollection = collection(
       db,
-      "userdata",
+      ROOT_USERDATA_COLLECTION,
       userStore.user.uid,
       ITEM_PATH,
     );
@@ -48,6 +50,20 @@ export const useProducts = defineStore(ITEM_PATH, () => {
       id: doc.id,
     }))) as ProductWithId[];
 
+    if (userStore.user.email != null) {
+      const collaborationProducts = await getDocs(
+        collection(db, "collaborators", userStore.user.email, "products"),
+      );
+
+      const productReferences = collaborationProducts.docs.map(
+        (doc) => doc.data().uid,
+      );
+      productReferences.forEach(async (reference) => {
+        const product = await getDoc(reference);
+        itemsList.push({ ...(product.data() as Product), id: product.id });
+      });
+    }
+
     items.value = itemsList;
   };
   useRefetchOnAuthChange(fetchItems);
@@ -55,16 +71,22 @@ export const useProducts = defineStore(ITEM_PATH, () => {
   const setAttributeOfItem = async (item: ProductWithId, text: string) => {
     if (uuid.value === undefined) return;
 
-    await updateDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), {
-      text,
-    });
+    await updateDoc(
+      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
+      {
+        text,
+      },
+    );
     fetchItems();
   };
 
   const putItem = async (item: ProductWithId) => {
     if (uuid.value === undefined) return;
 
-    await setDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), item);
+    await setDoc(
+      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
+      item,
+    );
     fetchItems();
   };
 
@@ -72,7 +94,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     if (uuid.value === undefined) return;
 
     const doc = await addDoc(
-      collection(db, "userdata", uuid.value, ITEM_PATH),
+      collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
       item,
     );
     fetchItems();
@@ -91,7 +113,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     items,
     fetchItems,
     selectedItem,
-    key: ITEM_PATH,
+    collectionName: ITEM_PATH,
     getItem,
   };
 });

@@ -12,8 +12,10 @@ const { handleSubmit } = useForm({
     email: "",
   },
   validationSchema: {
-    name: string().required(),
-    email: string().email().required(),
+    name: string().required("The name is required."),
+    email: string()
+      .email("The email must be a valid email address.")
+      .required("The email is required."),
   },
 });
 
@@ -47,7 +49,7 @@ const open = defineModel<boolean>();
     action="Add"
     class="mt-3 flex flex-col gap-3"
     hide-buttons
-    @confirm="console.log(formRef)"
+    @confirm="open = false"
     @cancel="open = false"
   >
     <form ref="formRef" class="flex flex-col gap-2" @submit="onSubmit">

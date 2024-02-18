@@ -12,6 +12,7 @@ import { computed, ref, watch } from "vue";
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
+import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
 import { Template, TemplateWithId } from "@/types/templates";
 
@@ -38,7 +39,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
     if (!userStore.user?.uid) return;
     const itemsCollection = collection(
       db,
-      "userdata",
+      ROOT_USERDATA_COLLECTION,
       userStore.user.uid,
       ITEM_PATH,
     );
@@ -55,23 +56,32 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
   const setAttributeOfItem = async (item: TemplateWithId, text: string) => {
     if (uuid.value === undefined) return;
 
-    await updateDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), {
-      text,
-    });
+    await updateDoc(
+      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
+      {
+        text,
+      },
+    );
     fetchItems();
   };
 
   const putItem = async (item: TemplateWithId) => {
     if (uuid.value === undefined) return;
 
-    await setDoc(doc(db, "userdata", uuid.value, ITEM_PATH, item.id), item);
+    await setDoc(
+      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
+      item,
+    );
     fetchItems();
   };
 
   const postItem = async (item: Template) => {
     if (uuid.value === undefined) return;
 
-    await addDoc(collection(db, "userdata", uuid.value, ITEM_PATH), item);
+    await addDoc(
+      collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
+      item,
+    );
     await fetchItems();
   };
 

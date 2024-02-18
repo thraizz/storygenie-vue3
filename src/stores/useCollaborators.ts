@@ -1,10 +1,9 @@
 // Collaborators is a collection inside a user's product.
 // It specifies who can access the product besides the owner.
 // An example path to a document in the collection is:
-// /userdata/nKaaFWfMR3R3rrKYlT722Tt6zycm/products/0P8O8nTCjYsLbbgryxpX/collaborators/OOVT3MG4UBwANwBUTImq
+// /ROOT_USERDATA_COLLECTION/nKaaFWfMR3R3rrKYlT722Tt6zycm/products/0P8O8nTCjYsLbbgryxpX/collaborators/OOVT3MG4UBwANwBUTImq
 
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -17,57 +16,73 @@ import { computed, ref, watch } from "vue";
 
 import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { db } from "@/firebase";
+import {
+  ROOT_INVITES_COLLECTION,
+  ROOT_USERDATA_COLLECTION,
+} from "@/firebase_constants";
 
 import { useProducts } from "./useProducts";
 import { useUser } from "./useUser";
 
+// Constants
+const ITEM_PATH = "collaborators";
+
+// Types
 export type Collaborator = {
   email: string;
   name: string;
 };
-
 export type CollaboratorWithId = Collaborator & {
   id: string;
+  type: "collaborator" | "collaborator_invite";
 };
 
-const ITEM_PATH = "collaborators";
-
+// Store
 export const useCollaborators = defineStore("collaborators", () => {
+  // State
   const items = ref<CollaboratorWithId[]>([]);
+
+  // Utils
   const userStore = useUser();
-
   const uuid = computed(() => userStore.user?.uid);
-
-  watch(
-    () => userStore.isLoggedIn,
-    (isLoggedIn) => {
-      if (isLoggedIn) {
-        fetchItems();
-      }
-    },
-  );
-
   const productStore = useProducts();
 
   const fetchItems = async () => {
     if (!userStore.user?.uid || !productStore.selectedItem) return;
     const itemsCollection = collection(
       db,
-      "userdata",
+      ROOT_USERDATA_COLLECTION,
       userStore.user.uid,
-      productStore.key,
+      productStore.collectionName,
       productStore.selectedItem.toString(),
       ITEM_PATH,
     );
     const itemsSnapshot = await getDocs(itemsCollection);
     const itemsList = (await itemsSnapshot.docs.map((doc) => ({
       ...doc.data(),
+      type: "collaborator",
       id: doc.id,
     }))) as CollaboratorWithId[];
 
+    const invitesCollection = collection(
+      db,
+      ROOT_USERDATA_COLLECTION,
+      userStore.user.uid,
+      productStore.collectionName,
+      productStore.selectedItem.toString(),
+      "collaborator_invites",
+    );
+    const invitesSnapshot = await getDocs(invitesCollection);
+    await invitesSnapshot.docs.forEach((doc) =>
+      itemsList.push({
+        ...(doc.data() as CollaboratorWithId),
+        type: "collaborator_invite",
+        id: doc.id,
+      }),
+    );
+
     items.value = itemsList;
   };
-  useRefetchOnAuthChange(fetchItems);
 
   const setAttributeOfItem = async (item: CollaboratorWithId, text: string) => {
     if (uuid.value === undefined || !productStore.selectedItem) return;
@@ -75,9 +90,9 @@ export const useCollaborators = defineStore("collaborators", () => {
     await updateDoc(
       doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         productStore.selectedItem.toString(),
         ITEM_PATH,
         item.id,
@@ -95,9 +110,9 @@ export const useCollaborators = defineStore("collaborators", () => {
     await setDoc(
       doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         productStore.selectedItem.toString(),
         ITEM_PATH,
         item.id,
@@ -110,16 +125,37 @@ export const useCollaborators = defineStore("collaborators", () => {
   const postItem = async (item: Collaborator) => {
     if (uuid.value === undefined || !productStore.selectedItem) return;
 
-    await addDoc(
-      collection(
+    const inviteDocRef = doc(
+      db,
+      "collaborators_invites",
+      item.email,
+      productStore.collectionName,
+      productStore.selectedItem.toString(),
+    );
+    await setDoc(inviteDocRef, {
+      uid: doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         productStore.selectedItem.toString(),
-        ITEM_PATH,
       ),
-      item,
+    });
+    await setDoc(
+      doc(
+        db,
+        ROOT_USERDATA_COLLECTION,
+        uuid.value,
+        productStore.collectionName,
+        productStore.selectedItem.toString(),
+        "collaborator_invites",
+        item.email,
+      ),
+      {
+        email: item.email,
+        name: item.name,
+        ref: inviteDocRef,
+      },
     );
     fetchItems();
   };
@@ -128,22 +164,46 @@ export const useCollaborators = defineStore("collaborators", () => {
     return items.value.find((item) => item.id === id);
   };
 
-  const deleteItem = async (id: string) => {
+  const deleteItem = async (collaborator: CollaboratorWithId) => {
     if (uuid.value === undefined || !productStore.selectedItem) return;
 
     await deleteDoc(
       doc(
         db,
-        "userdata",
+        ROOT_USERDATA_COLLECTION,
         uuid.value,
-        productStore.key,
+        productStore.collectionName,
         productStore.selectedItem.toString(),
-        ITEM_PATH,
-        id,
+        collaborator.type === "collaborator_invite"
+          ? "collaborator_invites"
+          : "collaborators",
+        collaborator.id,
       ),
     );
+    if (collaborator.type === "collaborator_invite") {
+      await deleteDoc(
+        doc(
+          db,
+          ROOT_INVITES_COLLECTION,
+          collaborator.email,
+          productStore.collectionName,
+          productStore.selectedItem.toString(),
+        ),
+      );
+    }
     fetchItems();
   };
+
+  // Util
+  useRefetchOnAuthChange(fetchItems);
+  watch(
+    () => userStore.isLoggedIn,
+    (isLoggedIn) => {
+      if (isLoggedIn) {
+        fetchItems();
+      }
+    },
+  );
 
   return {
     setAttributeOfItem,

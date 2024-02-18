@@ -129,13 +129,12 @@ const appNavigation = [
         </div>
 
         <div class="mt-3 space-y-1 px-2">
-          <DisclosureButton
+          <router-link
             v-for="item in userNavigation"
             :key="item.name"
-            as="router-link"
             :to="item.href"
             class="navigation-item light cursor-pointer"
-            >{{ item.name }}</DisclosureButton
+            >{{ item.name }}</router-link
           >
 
           <DisclosureButton
