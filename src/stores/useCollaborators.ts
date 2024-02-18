@@ -72,6 +72,7 @@ export const useCollaborators = defineStore("collaborators", () => {
       productStore.selectedItem.toString(),
       "collaborator_invites",
     );
+
     const invitesSnapshot = await getDocs(invitesCollection);
     await invitesSnapshot.docs.forEach((doc) =>
       itemsList.push({

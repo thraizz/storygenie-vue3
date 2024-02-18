@@ -19,7 +19,7 @@ defineProps({
 <template>
   <router-link
     :key="item.id"
-    :to="`/${item.id}`"
+    :to="`/products/${item.id}`"
     class="overflow-hidden rounded-xl border border-gray-200 transition hover:shadow-lg"
   >
     <div
@@ -51,7 +51,7 @@ defineProps({
           >
             <MenuItem v-slot="{ active }">
               <router-link
-                :to="`/${item.id}/edit`"
+                :to="`/products/${item.id}/edit`"
                 :class="[
                   active ? 'bg-gray-50' : '',
                   'block px-3 py-1 text-sm leading-6 text-gray-900',

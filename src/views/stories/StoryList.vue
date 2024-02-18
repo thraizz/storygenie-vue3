@@ -29,13 +29,13 @@ const items = computed(() => storyStore.items);
       class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6 lg:px-8"
     >
       <p class="text-lg font-medium leading-6 text-gray-900">
-        <router-link :to="`/${selectedProductId}/story/${item.id}`">
+        <router-link :to="`/products/${selectedProductId}/story/${item.id}`">
           {{ getHeadlineFromDoc(item.content) }}
         </router-link>
       </p>
 
       <div class="flex shrink-0 items-center gap-x-4">
-        <router-link :to="`/${selectedProductId}/story/${item.id}`">
+        <router-link :to="`/products/${selectedProductId}/story/${item.id}`">
           <span class="sr-only"
             >View story {{ getHeadlineFromDoc(item.content) }}</span
           >

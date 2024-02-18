@@ -63,7 +63,7 @@ export const router = createRouter({
       },
     },
     {
-      path: "/:productId",
+      path: "/products/",
       meta: {
         requiresAuth: true,
         showStoryCreation: true,
@@ -71,7 +71,15 @@ export const router = createRouter({
       children: [
         {
           path: "",
-          component: () => import("./views/stories/Stories.vue"),
+          component: () => import("./views/product/ProductSelection.vue"),
+          meta: {
+            title: "Home",
+            requiresAuth: true,
+          },
+        },
+        {
+          path: ":productId",
+          component: () => import("./views/product/Product.vue"),
           meta: {
             showProductPicker: true,
             showProductAsTitle: true,
@@ -83,6 +91,38 @@ export const router = createRouter({
               meta: {
                 showProductPicker: true,
               },
+            },
+            {
+              path: "edit",
+              component: () => import("./views/product/ProductEditView.vue"),
+              meta: {
+                title: "Edit Product",
+                showBack: true,
+                requiresAuth: true,
+              },
+            },
+            {
+              path: "story/:id",
+              component: () => import("./views/stories/Story.vue"),
+              meta: {
+                title: "Story",
+                showBack: true,
+                showProductPicker: true,
+              },
+            },
+            {
+              path: "story/new",
+              component: () => import("./views/stories/CreateStory.vue"),
+              meta: {
+                showStoryCreation: false,
+                title: "Create Story",
+                showBack: true,
+                showProductPicker: true,
+              },
+            },
+            {
+              path: "settings",
+              component: () => import("./views/product/Settings.vue"),
             },
             {
               path: "collaborators",
@@ -108,39 +148,7 @@ export const router = createRouter({
                 },
               ],
             },
-            {
-              path: "settings",
-              component: () => import("./views/product/Settings.vue"),
-            },
           ],
-        },
-        {
-          path: "edit",
-          component: () => import("./views/product/ProductEditView.vue"),
-          meta: {
-            title: "Edit Product",
-            showBack: true,
-            requiresAuth: true,
-          },
-        },
-        {
-          path: "story/:id",
-          component: () => import("./views/stories/Story.vue"),
-          meta: {
-            title: "Story",
-            showBack: true,
-            showProductPicker: true,
-          },
-        },
-        {
-          path: "story/new",
-          component: () => import("./views/stories/CreateStory.vue"),
-          meta: {
-            showStoryCreation: false,
-            title: "Create Story",
-            showBack: true,
-            showProductPicker: true,
-          },
         },
       ],
     },

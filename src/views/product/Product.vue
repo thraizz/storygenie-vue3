@@ -7,7 +7,7 @@ import { useSelectedProductId } from "@/composables/useSelectedProduct";
 
 const selectedProductId = useSelectedProductId();
 const navigation = computed(() => {
-  const baseUrl = `/${selectedProductId.value}`;
+  const baseUrl = `/products/${selectedProductId.value}`;
 
   return [
     {

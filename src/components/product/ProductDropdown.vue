@@ -26,7 +26,9 @@ const router = useRouter();
     :options="productStore.items"
     :display-value="(item: any) => (item ? item.name : '')"
     placeholder="Select a product"
-    @update:model-value="(value: ProductWithId) => router.push(`/${value.id}`)"
+    @update:model-value="
+      (value: ProductWithId) => router.push(`/products/${value.id}`)
+    "
   />
 </template>
 @/stores/useProducts

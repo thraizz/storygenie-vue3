@@ -15,7 +15,7 @@ const productStore = useProducts();
 const appNavigation = [
   {
     name: "Products",
-    href: "/",
+    href: "/products",
   },
   {
     name: "Templates",
@@ -44,7 +44,8 @@ const appNavigation = [
           <router-link
             v-for="item in appNavigation"
             :key="item.href"
-            class="hidden font-semibold text-white lg:block"
+            class="desktop-navigation"
+            active-class="text-indigo-400 text-underline active"
             :to="item.href"
             >{{ item.name }}</router-link
           >
@@ -85,6 +86,7 @@ const appNavigation = [
           as="a"
           :to="item.href"
           class="navigation-item"
+          active-class="active bg-indigo-500 bg-opacity-75"
           >{{ item.name }}</router-link
         >
       </div>
@@ -151,6 +153,9 @@ const appNavigation = [
 <style lang="scss">
 .navigation-item {
   @apply block rounded-md px-3 py-2 text-base text-white hover:bg-indigo-500 hover:bg-opacity-75;
+  &.active {
+    @apply bg-indigo-500 bg-opacity-75;
+  }
 }
 .search-input {
   @apply block h-fit w-0 rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 focus:w-full focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600 sm:text-sm sm:leading-6 lg:w-full;
@@ -159,5 +164,10 @@ const appNavigation = [
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
 }
+.desktop-navigation {
+  @apply hidden font-semibold text-white hover:text-indigo-200 lg:block;
+  &.active {
+    @apply text-indigo-400;
+  }
+}
 </style>
-@/stores/useProducts @/stores/useUser
