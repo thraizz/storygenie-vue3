@@ -27,6 +27,11 @@ defineProps({
     >
       <div class="text-md font-semibold leading-6 text-gray-900">
         {{ item.name }}
+        <span
+          v-if="item.role === 'collaborator'"
+          class="text-sm font-normal leading-5 text-gray-500"
+          >(Collaborator)</span
+        >
       </div>
 
       <Menu as="div" class="relative ml-auto">
@@ -98,6 +103,14 @@ defineProps({
 
         <dd class="flex items-start gap-x-2">
           <div class="font-medium text-gray-900">Jira</div>
+        </dd>
+      </div>
+      <!-- Role -->
+      <div class="flex justify-between gap-x-4 py-3">
+        <dt class="text-gray-500">Role</dt>
+
+        <dd class="text-gray-700">
+          {{ item.role === "collaborator" ? "Collaborator" : "Owner" }}
         </dd>
       </div>
     </dl>

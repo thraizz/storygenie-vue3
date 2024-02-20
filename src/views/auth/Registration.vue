@@ -29,7 +29,6 @@ const router = useRouter();
 const onSubmit = handleSubmit(
   // Success
   (values: FormData) => {
-    console.log(values);
     createUserWithEmailAndPassword(auth, values.email, values.password)
       .then(() => {
         logInWithFirebase(values.email, values.password);

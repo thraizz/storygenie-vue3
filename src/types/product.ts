@@ -8,7 +8,10 @@ export type Product = {
   jiraProjectId?: string;
 };
 
-export type ProductWithId = Product & { id: string };
+export type ProductWithId = Product & {
+  id: string;
+  role: "collaborator" | "owner";
+};
 
 export type ProductInput = {
   name: string;

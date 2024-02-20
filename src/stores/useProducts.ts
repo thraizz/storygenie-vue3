@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  DocumentReference,
   getDoc,
   getDocs,
   setDoc,
@@ -47,23 +48,40 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     const itemsSnapshot = await getDocs(itemsCollection);
     const itemsList = (await itemsSnapshot.docs.map((doc) => ({
       ...doc.data(),
+      role: "owner",
       id: doc.id,
     }))) as ProductWithId[];
 
     if (userStore.user.email != null) {
-      const collaborationProducts = await getDocs(
-        collection(db, "collaborators", userStore.user.email, "products"),
-      );
+      try {
+        const collaborationProducts = await getDocs(
+          collection(
+            db,
+            ROOT_USERDATA_COLLECTION,
+            userStore.user.uid,
+            "product_references",
+          ),
+        );
 
-      const productReferences = collaborationProducts.docs.map(
-        (doc) => doc.data().uid,
-      );
-      productReferences.forEach(async (reference) => {
-        const product = await getDoc(reference);
-        itemsList.push({ ...(product.data() as Product), id: product.id });
-      });
+        const productReferences = collaborationProducts.docs.map(
+          (doc) => doc.data().reference as DocumentReference,
+        );
+        const products = await Promise.all(
+          productReferences.map(async (reference) => await getDoc(reference)),
+        );
+        products.forEach((product) => {
+          if (product != undefined) {
+            itemsList.push({
+              ...product.data(),
+              id: product.id,
+              role: "collaborator",
+            } as ProductWithId);
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
-
     items.value = itemsList;
   };
   useRefetchOnAuthChange(fetchItems);

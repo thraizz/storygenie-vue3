@@ -1,5 +1,8 @@
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
-const { ROOT_INVITES_COLLECTION } = require("./firebase_constants");
+const {
+  ROOT_INVITES_COLLECTION,
+  ROOT_USERDATA_COLLECTION,
+} = require("./firebase_constants");
 
 const admin = require("firebase-admin");
 
@@ -26,6 +29,16 @@ exports.addCollaborator = onDocumentCreated(
           .doc(email);
 
         userInviteRef.get().then((doc) => {
+          // Add product ref to user's product_references collection
+          admin
+            .firestore()
+            .collection(ROOT_USERDATA_COLLECTION)
+            .doc(uid)
+            .collection("product_references")
+            .add({
+              reference: productReference,
+            });
+
           // Add user uid to collaborators collection
           productReference
             .collection("collaborators")

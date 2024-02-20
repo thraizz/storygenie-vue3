@@ -29,7 +29,7 @@ const cta = computed(() => {
   }
   if (route?.meta.showStoryCreation) {
     return {
-      path: `/${selectedProduct.value}/story/new`,
+      path: `/products/${selectedProduct.value}/story/new`,
       text: "Create Story",
     };
   }

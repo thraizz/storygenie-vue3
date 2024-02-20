@@ -26,7 +26,7 @@ const items = computed(() => storyStore.items);
     <li
       v-for="item in items"
       :key="item.id"
-      class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6 lg:px-8"
+      class="relative flex justify-between gap-x-6 rounded-lg px-4 py-5 hover:bg-gray-50 sm:px-6 lg:px-8"
     >
       <p class="text-lg font-medium leading-6 text-gray-900">
         <router-link :to="`/products/${selectedProductId}/story/${item.id}`">

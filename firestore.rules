@@ -23,14 +23,8 @@ service cloud.firestore {
     }
     // Allow read and write access to product data for collaborators
     match /userdata/{user_id}/products/{product_id} {
-      allow read, write: if request.auth.uid == user_id;
-      // allow read, write: if isCollaborator(user_id, product_id);
+      // allow read, write: if request.auth.uid == user_id;
+      allow read, write: if exists(/databases/$(database)/documents/userdata/$(user_id)/products/$(product_id)/collaborators/$(request.auth.uid));
     }
-
-    // Function to check if the user is a collaborator on the product
-    // function isCollaborator(user_id, product_id) {
-    //  return exists(/databases/$(database)/documents/userdata/$(user_id)/products/$(product_id)/collaborators/$(request.auth.uid));
-    //}
-
   }
 }
