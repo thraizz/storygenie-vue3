@@ -5,14 +5,17 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
     // Allow read for /userdata/public
     match /userdata/public/{document=**} {
       allow read: if true;
     }
+
     // Allow read/write to collaborators collection for logged in users
     match /collaborators_invites/{document=**} {
       allow read, write: if request.auth.uid != null;
     }
+
     match /collaborators/{document=**} {
       allow read, write: if request.auth.uid != null;
     }
@@ -21,10 +24,9 @@ service cloud.firestore {
     match /userdata/{userID}/{document=**} {
       allow read, write: if request.auth.uid == userID;
     }
-    // Allow read and write access to product data for collaborators
-    match /userdata/{user_id}/products/{product_id} {
-      // allow read, write: if request.auth.uid == user_id;
-      allow read, write: if exists(/databases/$(database)/documents/userdata/$(user_id)/products/$(product_id)/collaborators/$(request.auth.uid));
+
+    match /userdata/{userID}/products/{product_id}/{document=**} {
+      allow read, write: if exists(/databases/$(database)/documents/userdata/$(userID)/products/$(product_id)/collaborators/$(request.auth.uid));
     }
   }
 }

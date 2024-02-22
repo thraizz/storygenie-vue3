@@ -7,11 +7,17 @@ export type Product = {
   description: string;
   jiraProjectId?: string;
 };
-
-export type ProductWithId = Product & {
+export type CollaboratorProduct = Product & {
   id: string;
-  role: "collaborator" | "owner";
+  role: "collaborator";
+  referencePath: string;
 };
+export type ProductWithId =
+  | (Product & {
+      id: string;
+      role: "owner";
+    })
+  | CollaboratorProduct;
 
 export type ProductInput = {
   name: string;

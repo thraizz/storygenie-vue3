@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useField, useForm } from "vee-validate";
+import { configure, useField, useForm } from "vee-validate";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { string } from "yup";
@@ -17,11 +17,14 @@ const { handleSubmit, resetForm, setErrors } = useForm<FormData>({
     email: string().required().email(),
     password: string().required().min(6),
   },
-  initialValues: {
-    email: "",
-    password: "",
-  },
 });
+configure({
+  validateOnBlur: false, // controls if blur events should trigger validation with handleChange handler
+  validateOnChange: false, // controls if change events should trigger validation with handleChange handler
+  validateOnInput: false, // controls if input events should trigger validation with handleChange handler
+  validateOnModelUpdate: false, // controls if update:modelValue events should trigger validation with handleChange handler
+});
+
 const onSubmit = handleSubmit(
   // Success
   (values: FormData) => {
@@ -102,10 +105,11 @@ watch(
             >
 
             <div class="text-sm">
-              <a
-                href="#"
+              <router-link
+                to="#"
+                tabindex="1"
                 class="font-semibold text-indigo-600 hover:text-indigo-500"
-                >Forgot password?</a
+                >Forgot password?</router-link
               >
             </div>
           </div>
@@ -150,4 +154,3 @@ watch(
     </div>
   </div>
 </template>
-@/stores/useUser

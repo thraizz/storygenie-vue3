@@ -116,4 +116,3 @@ defineProps({
     </dl>
   </router-link>
 </template>
-@/stores/useProducts

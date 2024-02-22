@@ -89,4 +89,3 @@ const title = computed(() => {
     </main>
   </div>
 </template>
-@/stores/useProducts

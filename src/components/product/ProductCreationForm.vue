@@ -85,4 +85,3 @@ const onSubmit = handleSubmit(async (values) => {
     </button>
   </form>
 </template>
-@/stores/useProducts

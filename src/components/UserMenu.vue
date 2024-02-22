@@ -32,7 +32,7 @@ const userStore = useUser();
 
             <img
               v-if="userStore.user?.photoURL && userStore.user.photoURL !== ''"
-              class="h-8 w-8 rounded-full"
+              class="h-8 w-8 rounded-full object-cover"
               :src="userStore.user.photoURL"
               alt=""
             />
@@ -98,4 +98,3 @@ const userStore = useUser();
     >
   </div>
 </template>
-@/stores/useUser

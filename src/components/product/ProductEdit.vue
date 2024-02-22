@@ -81,4 +81,3 @@ const onSubmit = handleSubmit(
     </button>
   </form>
 </template>
-@/stores/useProducts

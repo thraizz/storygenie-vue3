@@ -159,4 +159,3 @@ watch(
     </div>
   </div>
 </template>
-@/stores/useUser

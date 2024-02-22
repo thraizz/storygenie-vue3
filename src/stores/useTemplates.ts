@@ -22,7 +22,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
   const items = ref<TemplateWithId[]>([]);
   const userStore = useUser();
 
-  const selectedItem = useSelectedProductId();
+  const selectedItemId = useSelectedProductId();
 
   const uuid = computed(() => userStore.user?.uid);
 
@@ -91,7 +91,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
     postItem,
     items,
     fetchItems,
-    selectedItem,
+    selectedItemId,
     key: ITEM_PATH,
   };
 });

@@ -36,7 +36,6 @@ const { handleSubmit } = useForm<FormData>({
 });
 
 const templateStore = useTemplates();
-templateStore.fetchItems();
 const { user } = useUser();
 const selectedProduct = useSelectedProductId();
 
@@ -128,4 +127,3 @@ const onSubmit = handleSubmit(
     </button>
   </form>
 </template>
-@/stores/useTemplates @/stores/useUser

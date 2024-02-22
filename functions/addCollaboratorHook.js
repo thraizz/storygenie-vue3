@@ -1,4 +1,7 @@
-const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const {
+  onDocumentCreated,
+  onDocumentDeleted,
+} = require("firebase-functions/v2/firestore");
 const {
   ROOT_INVITES_COLLECTION,
   ROOT_USERDATA_COLLECTION,
@@ -17,12 +20,19 @@ exports.addCollaborator = onDocumentCreated(
       .auth()
       .getUserByEmail(email)
       .then((userRecord) => {
+        // Exit if user has already been added to the product
+
         console.log(
           "User exists. Adding to collaborators collection and removing invite.",
         );
 
         const uid = userRecord.uid;
         const productId = snap.params.productId;
+
+        if (userRecord.uid === productReference) {
+          console.log("User is already a collaborator");
+          return;
+        }
 
         const userInviteRef = productReference
           .collection("collaborator_invites")
@@ -35,7 +45,8 @@ exports.addCollaborator = onDocumentCreated(
             .collection(ROOT_USERDATA_COLLECTION)
             .doc(uid)
             .collection("product_references")
-            .add({
+            .doc(productId)
+            .set({
               reference: productReference,
             });
 
@@ -60,6 +71,33 @@ exports.addCollaborator = onDocumentCreated(
           // Delete the invite document from the user's collection
           userInviteRef.delete();
         });
+      })
+      .catch((error) => {
+        console.log("Error adding collaborator", error);
+      });
+  },
+);
+
+exports.removeCollaboratorFromProduct = onDocumentDeleted(
+  `${ROOT_USERDATA_COLLECTION}/{userid}/products/{productId}/collaborator/{email}`,
+  (snap, context) => {
+    const email = snap.params.email;
+
+    // Remove the product from the users product_references collection
+    admin
+      .auth()
+      .getUserByEmail(email)
+      .then((userRecord) => {
+        const uid = userRecord.uid;
+        const productId = snap.params.productId;
+
+        admin
+          .firestore()
+          .collection(ROOT_USERDATA_COLLECTION)
+          .doc(uid)
+          .collection("product_references")
+          .doc(productId)
+          .delete();
       });
   },
 );

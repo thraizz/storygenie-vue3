@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useTemplates } from "@/stores/useTemplates";
 const templateStore = useTemplates();
-templateStore.fetchItems();
 </script>
 
 <template>
@@ -21,4 +20,3 @@ templateStore.fetchItems();
     </div>
   </div>
 </template>
-@/stores/useTemplates

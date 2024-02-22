@@ -51,7 +51,7 @@ const appNavigation = [
           >
         </div>
 
-        <ProductDropdown v-if="productStore.selectedItem" />
+        <ProductDropdown v-if="productStore.selectedItemId" />
 
         <div class="flex flex-row items-center gap-4">
           <UserMenu />

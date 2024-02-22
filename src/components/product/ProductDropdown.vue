@@ -8,7 +8,6 @@ import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
 const productStore = useProducts();
-productStore.fetchItems();
 const selectedProduct = useSelectedProductId();
 const selectedOption = computed(() =>
   productStore.items.find(
@@ -31,4 +30,3 @@ const router = useRouter();
     "
   />
 </template>
-@/stores/useProducts

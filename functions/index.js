@@ -9,3 +9,6 @@ exports.usercreationhook = require("./createUserHook").createUserHook;
 
 // Check if user exists already when adding a collaborator
 exports.addcollaboratorhook = require("./addCollaboratorHook").addCollaborator;
+
+exports.removecollaboratorhook =
+  require("./addCollaboratorHook").removeCollaboratorFromProduct;

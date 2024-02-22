@@ -70,4 +70,3 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
     </button>
   </form>
 </template>
-@/stores/useTemplates

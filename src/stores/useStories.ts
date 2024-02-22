@@ -2,18 +2,18 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
+  getDocsFromServer,
+  onSnapshot,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
-import { StoryWithId } from "@/types/story";
+import { Story, StoryWithId } from "@/types/story";
 
 import { useProducts } from "./useProducts";
 
@@ -21,11 +21,12 @@ const ITEM_PATH = "stories";
 
 export const useStories = defineStore(ITEM_PATH, () => {
   const items = ref<StoryWithId[]>([]);
-  const userStore = useUser();
 
+  const userStore = useUser();
   const productStore = useProducts();
 
   const uuid = computed(() => userStore.user?.uid);
+  const selectedProduct = computed(() => productStore.selectedProduct);
 
   watch(
     () => userStore.isLoggedIn,
@@ -36,25 +37,43 @@ export const useStories = defineStore(ITEM_PATH, () => {
     },
   );
 
-  const selectedProduct = useSelectedProductId();
+  const storiesCollection = computed(() =>
+    uuid.value && productStore.selectedItemId
+      ? selectedProduct.value?.role === "collaborator"
+        ? collection(db, selectedProduct.value.referencePath + "/stories")
+        : collection(
+            db,
+            ROOT_USERDATA_COLLECTION,
+            uuid.value,
+            productStore.collectionName,
+            productStore.selectedItemId.toString(),
+            ITEM_PATH,
+          )
+      : null,
+  );
+
+  if (storiesCollection.value) {
+    onSnapshot(storiesCollection.value, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (doc.metadata.hasPendingWrites) return;
+        items.value = items.value.filter((item) => item.id !== doc.id);
+        items.value.push({
+          ...(doc.data() as Story),
+          id: doc.id,
+        });
+      });
+    });
+  }
 
   const fetchItems = async () => {
-    if (!userStore.user?.uid || !productStore.selectedItem) return;
-    const itemsCollection = collection(
-      db,
-      ROOT_USERDATA_COLLECTION,
-      userStore.user.uid,
-      productStore.collectionName,
-      productStore.selectedItem.toString(),
-      ITEM_PATH,
-    );
-    const itemsSnapshot = await getDocs(itemsCollection);
-    const itemsList = (await itemsSnapshot.docs.map((doc) => ({
+    if (!storiesCollection.value) return;
+
+    console.log(selectedProduct.value?.role);
+    const itemsSnapshot = await getDocsFromServer(storiesCollection.value);
+    items.value = (await itemsSnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }))) as StoryWithId[];
-
-    items.value = itemsList;
   };
 
   const setAttributeOfItem = async (item: StoryWithId, text: string) => {
@@ -70,40 +89,17 @@ export const useStories = defineStore(ITEM_PATH, () => {
     await updateDoc(docRef, {
       text,
     });
-    fetchItems();
   };
 
   const putItem = async (item: StoryWithId) => {
-    if (uuid.value === undefined || !selectedProduct.value) return;
+    if (!storiesCollection.value) return;
 
-    await setDoc(
-      doc(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        selectedProduct.value as string,
-        ITEM_PATH,
-        item.id,
-      ),
-      item,
-    );
-    fetchItems();
+    await setDoc(doc(storiesCollection.value, item.id), item);
   };
 
   const deleteStory = async (item: StoryWithId) => {
-    if (uuid.value === undefined || !selectedProduct.value) return;
-    await deleteDoc(
-      doc(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        selectedProduct.value as string,
-        ITEM_PATH,
-        item.id,
-      ),
-    );
+    if (!storiesCollection.value) return;
+    await deleteDoc(doc(storiesCollection.value, item.id));
   };
 
   return {

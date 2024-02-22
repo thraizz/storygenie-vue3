@@ -4,7 +4,6 @@ import { useProducts } from "@/stores/useProducts";
 import { useStories } from "@/stores/useStories";
 
 const productStore = useProducts();
-productStore.fetchItems();
 
 const storyStore = useStories();
 storyStore.items = [];
@@ -30,4 +29,3 @@ storyStore.items = [];
     Create a product by clicking the button above.
   </p>
 </template>
-@/stores/useProducts @/stores/useStories

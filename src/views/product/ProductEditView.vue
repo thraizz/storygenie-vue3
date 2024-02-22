@@ -16,4 +16,3 @@ const product = computed<ProductWithId | undefined>(() =>
 <template>
   <ProductEdit v-if="product" :product="product" />
 </template>
-@/stores/useProducts

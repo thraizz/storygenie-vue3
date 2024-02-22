@@ -3,15 +3,21 @@ import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 import { computed, watch } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
+import { useProducts } from "@/stores/useProducts";
 import { useStories } from "@/stores/useStories";
 import { getHeadlineFromDoc } from "@/types/story";
 const storyStore = useStories();
-storyStore.fetchItems();
+const productStore = useProducts();
 
 const selectedProductId = useSelectedProductId();
 watch(
   () => selectedProductId.value,
   () => storyStore.fetchItems(),
+);
+watch(
+  () => productStore.items,
+  () => storyStore.fetchItems(),
+  { immediate: true },
 );
 
 const items = computed(() => storyStore.items);
@@ -49,4 +55,3 @@ const items = computed(() => storyStore.items);
     </li>
   </ul>
 </template>
-@/stores/useStories

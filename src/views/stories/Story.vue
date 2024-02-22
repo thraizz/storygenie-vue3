@@ -6,7 +6,6 @@ import StoryDisplay from "@/components/story/StoryDisplay.vue";
 import { useStories } from "@/stores/useStories";
 
 const storyStore = useStories();
-storyStore.fetchItems();
 
 const route = useRoute();
 const story = computed(() =>
@@ -19,4 +18,3 @@ const story = computed(() =>
     <StoryDisplay :story="story" />
   </div>
 </template>
-@/stores/useStories
