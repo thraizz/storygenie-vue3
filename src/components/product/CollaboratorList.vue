@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UserCircleIcon } from "@heroicons/vue/24/outline";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useCollaborators } from "@/stores/useCollaborators";
 
@@ -16,6 +16,8 @@ const addCollaborator = () => {
     email: "grass.olive.342@example.com",
   });
 };
+
+const computedItems = computed(() => collaboratorStore.items);
 </script>
 
 <template>
@@ -48,12 +50,12 @@ const addCollaborator = () => {
   </div>
 
   <ul
-    v-if="collaboratorStore.items.length > 0"
+    v-if="computedItems.length > 0"
     role="list"
     class="divide-y divide-gray-100 px-4"
   >
     <li
-      v-for="collaborator in collaboratorStore.items"
+      v-for="collaborator in computedItems"
       :key="collaborator.id"
       class="flex justify-between gap-x-6 py-5"
     >
