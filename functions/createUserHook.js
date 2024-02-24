@@ -17,9 +17,6 @@ const createTemplates = async (user) => {
     },
   ];
 
-  // Add the user to the userdata collection
-  await getFirestore().collection("userdata").doc(user.uid).set({});
-
   // Build all promises
   const promises = templates.map((template) =>
     getFirestore()
