@@ -5,7 +5,6 @@ import {
   DocumentReference,
   getDoc,
   getDocs,
-  onSnapshot,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -44,76 +43,76 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     },
   );
 
-  if (uuid.value) {
-    onSnapshot(
-      collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
-      (querySnapshot) => {
-        const updatedItems: ProductWithId[] = [];
-        querySnapshot.forEach((doc) => {
-          if (doc.metadata.hasPendingWrites) return;
-          const existingItem = items.value.find((item) => item.id === doc.id);
-          if (existingItem) {
-            // Update existing item
-            existingItem.role = "owner";
-            existingItem.id = doc.id;
-            updatedItems.push(existingItem);
-          } else {
-            // Add new item
-            updatedItems.push({
-              ...(doc.data() as Product),
-              role: "owner",
-              id: doc.id,
-            });
-          }
-        });
+  // if (uuid.value) {
+  //   onSnapshot(
+  //     collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
+  //     (querySnapshot) => {
+  //       const updatedItems: ProductWithId[] = [];
+  //       querySnapshot.forEach((doc) => {
+  //         if (doc.metadata.hasPendingWrites) return;
+  //         const existingItem = items.value.find((item) => item.id === doc.id);
+  //         if (existingItem) {
+  //           // Update existing item
+  //           existingItem.role = "owner";
+  //           existingItem.id = doc.id;
+  //           updatedItems.push(existingItem);
+  //         } else {
+  //           // Add new item
+  //           updatedItems.push({
+  //             ...(doc.data() as Product),
+  //             role: "owner",
+  //             id: doc.id,
+  //           });
+  //         }
+  //       });
 
-        // Remove deleted items
-        items.value = updatedItems.filter((item) =>
-          querySnapshot.docs.some((doc) => doc.id === item.id),
-        );
-      },
-    );
-    onSnapshot(
-      collection(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        "product_references",
-      ),
-      (querySnapshot) => {
-        const updatedItems: ProductWithId[] = [];
-        querySnapshot.forEach(async (doc) => {
-          if (doc.metadata.hasPendingWrites) return;
-          productReferencesItems.value = querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          })) as { reference: DocumentReference; id: string }[];
+  //       // Remove deleted items
+  //       items.value = updatedItems.filter((item) =>
+  //         querySnapshot.docs.some((doc) => doc.id === item.id),
+  //       );
+  //     },
+  //   );
+  //   onSnapshot(
+  //     collection(
+  //       db,
+  //       ROOT_USERDATA_COLLECTION,
+  //       uuid.value,
+  //       "product_references",
+  //     ),
+  //     (querySnapshot) => {
+  //       const updatedItems: ProductWithId[] = [];
+  //       querySnapshot.forEach(async (doc) => {
+  //         if (doc.metadata.hasPendingWrites) return;
+  //         productReferencesItems.value = querySnapshot.docs.map((doc) => ({
+  //           ...doc.data(),
+  //           id: doc.id,
+  //         })) as { reference: DocumentReference; id: string }[];
 
-          const productReferences = querySnapshot.docs.map(
-            (doc) => doc.data().reference as DocumentReference,
-          );
-          const products = await Promise.all(
-            productReferences.map(async (reference) => {
-              return { product: await getDoc(reference), reference };
-            }),
-          );
-          products.forEach(({ product, reference }) => {
-            items.value.push({
-              ...product.data(),
-              referencePath: reference.path,
-              id: product.id,
-              role: "collaborator",
-            } as ProductWithId);
-          });
-        });
+  //         const productReferences = querySnapshot.docs.map(
+  //           (doc) => doc.data().reference as DocumentReference,
+  //         );
+  //         const products = await Promise.all(
+  //           productReferences.map(async (reference) => {
+  //             return { product: await getDoc(reference), reference };
+  //           }),
+  //         );
+  //         products.forEach(({ product, reference }) => {
+  //           items.value.push({
+  //             ...product.data(),
+  //             referencePath: reference.path,
+  //             id: product.id,
+  //             role: "collaborator",
+  //           } as ProductWithId);
+  //         });
+  //       });
 
-        // Remove deleted items
-        items.value = updatedItems.filter((item) =>
-          querySnapshot.docs.some((doc) => doc.id === item.id),
-        );
-      },
-    );
-  }
+  //       // Remove deleted items
+  //       items.value = updatedItems.filter((item) =>
+  //         querySnapshot.docs.some((doc) => doc.id === item.id),
+  //       );
+  //     },
+  //   );
+  // }
 
   const fetchItems = async () => {
     if (!userStore.user?.uid) return;
@@ -178,6 +177,8 @@ export const useProducts = defineStore(ITEM_PATH, () => {
         text,
       },
     );
+
+    fetchItems();
   };
 
   const putItem = async (item: ProductWithId) => {
@@ -187,6 +188,8 @@ export const useProducts = defineStore(ITEM_PATH, () => {
       doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
       item,
     );
+
+    fetchItems();
   };
 
   const postItem = async (item: Product) => {
@@ -196,6 +199,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
       collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
       item,
     );
+    fetchItems();
 
     return doc.id;
   };

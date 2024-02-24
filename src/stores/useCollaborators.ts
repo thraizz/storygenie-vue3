@@ -8,7 +8,6 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  onSnapshot,
   QueryDocumentSnapshot,
   setDoc,
   updateDoc,
@@ -55,86 +54,90 @@ export const useCollaborators = defineStore("collaborators", () => {
   const uuid = computed(() => userStore.user?.uid);
   const productStore = useProducts();
 
-  if (uuid.value && productStore.selectedItemId) {
-    onSnapshot(
-      collection(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        productStore.selectedItemId.toString(),
-        ITEM_PATH,
-      ),
-      (querySnapshot) => {
-        console.log("Updating ", ITEM_PATH);
-        const updatedItems: CollaboratorWithId[] = [];
-        querySnapshot.forEach((doc) => {
-          if (doc.metadata.hasPendingWrites) return;
-          const existingItem = items.value.find((item) => item.id === doc.id);
-          if (existingItem) {
-            // Update existing item
-            existingItem.id = doc.id;
-            updatedItems.push(existingItem);
-          } else {
-            // Add new item
-            updatedItems.push({
-              ...(doc.data() as Collaborator),
-              id: doc.id,
-              type: "collaborator",
-            });
-          }
-        });
+  // if (uuid.value && productStore.selectedItemId) {
+  //   onSnapshot(
+  //     collection(
+  //       db,
+  //       ROOT_USERDATA_COLLECTION,
+  //       uuid.value,
+  //       productStore.collectionName,
+  //       productStore.selectedItemId.toString(),
+  //       ITEM_PATH,
+  //     ),
+  //     (querySnapshot) => {
+  //       console.log(
+  //         "Received collaborator update at ",
+  //         new Date().toISOString(),
+  //       );
+  //       const updatedItems: CollaboratorWithId[] = [];
+  //       querySnapshot.forEach((doc) => {
+  //         if (doc.metadata.hasPendingWrites) return;
+  //         const existingItem = items.value.find((item) => item.id === doc.id);
+  //         if (existingItem) {
+  //           // Update existing item
+  //           existingItem.id = doc.id;
+  //           updatedItems.push(existingItem);
+  //         } else {
+  //           // Add new item
+  //           updatedItems.push({
+  //             ...(doc.data() as Collaborator),
+  //             id: doc.id,
+  //             type: "collaborator",
+  //           });
+  //         }
+  //       });
 
-        console.log("updatedItems", updatedItems);
+  //       // Remove deleted items
+  //       items.value = updatedItems
+  //         .filter((item) =>
+  //           querySnapshot.docs.some((doc) => doc.id === item.id),
+  //         )
+  //         .concat(
+  //           items.value.filter((item) => item.type === "collaborator_invite"),
+  //         );
+  //     },
+  //   );
+  //   onSnapshot(
+  //     collection(
+  //       db,
+  //       ROOT_USERDATA_COLLECTION,
+  //       uuid.value,
+  //       productStore.collectionName,
+  //       productStore.selectedItemId.toString(),
+  //       "collaborator_invites",
+  //     ),
+  //     (querySnapshot) => {
+  //       console.log(
+  //         "Updating collaborator_invites at",
+  //         new Date().toISOString(),
+  //       );
+  //       const updatedItems: CollaboratorWithId[] = [];
+  //       querySnapshot.forEach((doc) => {
+  //         if (doc.metadata.hasPendingWrites) return;
+  //         const existingItem = items.value.find((item) => item.id === doc.id);
+  //         if (existingItem) {
+  //           // Update existing item
+  //           existingItem.id = doc.id;
+  //           updatedItems.push(existingItem);
+  //         } else {
+  //           // Add new item
+  //           updatedItems.push({
+  //             ...(doc.data() as Collaborator),
+  //             id: doc.id,
+  //             type: "collaborator",
+  //           });
+  //         }
+  //       });
 
-        // Remove deleted items
-        items.value = updatedItems
-          .filter((item) =>
-            querySnapshot.docs.some((doc) => doc.id === item.id),
-          )
-          .concat(
-            items.value.filter((item) => item.type === "collaborator_invite"),
-          );
-      },
-    );
-    onSnapshot(
-      collection(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        productStore.selectedItemId.toString(),
-        "collaborator_invites",
-      ),
-      (querySnapshot) => {
-        console.log("Updating ", "collaborator_invites");
-        const updatedItems: CollaboratorWithId[] = [];
-        querySnapshot.forEach((doc) => {
-          if (doc.metadata.hasPendingWrites) return;
-          const existingItem = items.value.find((item) => item.id === doc.id);
-          if (existingItem) {
-            // Update existing item
-            existingItem.id = doc.id;
-            updatedItems.push(existingItem);
-          } else {
-            // Add new item
-            updatedItems.push({
-              ...(doc.data() as Collaborator),
-              id: doc.id,
-              type: "collaborator",
-            });
-          }
-        });
-
-        // Remove deleted items
-        items.value = updatedItems
-          .filter((item) =>
-            querySnapshot.docs.some((doc) => doc.id === item.id),
-          )
-          .concat(items.value.filter((item) => item.type === "collaborator"));
-      },
-    );
-  }
+  //       // Remove deleted items
+  //       items.value = updatedItems
+  //         .filter((item) =>
+  //           querySnapshot.docs.some((doc) => doc.id === item.id),
+  //         )
+  //         .concat(items.value.filter((item) => item.type === "collaborator"));
+  //     },
+  //   );
+  // }
 
   const fetchItems = async () => {
     if (!userStore.user?.uid || !productStore.selectedItemId) return;
@@ -187,6 +190,8 @@ export const useCollaborators = defineStore("collaborators", () => {
         text,
       },
     );
+
+    fetchItems();
   };
 
   const putItem = async (item: CollaboratorWithId) => {
@@ -204,6 +209,8 @@ export const useCollaborators = defineStore("collaborators", () => {
       ),
       item,
     );
+
+    fetchItems();
   };
 
   const postItem = async (item: Collaborator) => {
@@ -216,31 +223,35 @@ export const useCollaborators = defineStore("collaborators", () => {
       productStore.collectionName,
       productStore.selectedItemId.toString(),
     );
-    await setDoc(inviteDocRef, {
-      uid: doc(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        productStore.selectedItemId.toString(),
+    await Promise.all([
+      setDoc(inviteDocRef, {
+        uid: doc(
+          db,
+          ROOT_USERDATA_COLLECTION,
+          uuid.value,
+          productStore.collectionName,
+          productStore.selectedItemId.toString(),
+        ),
+      }),
+      setDoc(
+        doc(
+          db,
+          ROOT_USERDATA_COLLECTION,
+          uuid.value,
+          productStore.collectionName,
+          productStore.selectedItemId.toString(),
+          "collaborator_invites",
+          item.email,
+        ),
+        {
+          email: item.email,
+          name: item.name,
+          ref: inviteDocRef,
+        },
       ),
-    });
-    await setDoc(
-      doc(
-        db,
-        ROOT_USERDATA_COLLECTION,
-        uuid.value,
-        productStore.collectionName,
-        productStore.selectedItemId.toString(),
-        "collaborator_invites",
-        item.email,
-      ),
-      {
-        email: item.email,
-        name: item.name,
-        ref: inviteDocRef,
-      },
-    );
+    ]);
+
+    fetchItems();
   };
 
   const getItem = (id: string) => {
@@ -278,6 +289,7 @@ export const useCollaborators = defineStore("collaborators", () => {
       );
     }
     await new Promise((resolve) => setTimeout(resolve, 300));
+    fetchItems();
   };
 
   // Util
