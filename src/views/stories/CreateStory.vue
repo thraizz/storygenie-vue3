@@ -55,8 +55,9 @@ const onSubmit = handleSubmit(
       description: values.description,
     })
       .then((result: any) => {
-        console.log("Story created successfully.");
-        router.push(`/${selectedProduct.value}/story/${result.data?.result}`);
+        router.push(
+          `/products/${selectedProduct.value}/story/${result.data?.result}`,
+        );
         isLoading.value = false;
       })
       .catch((error) => {
