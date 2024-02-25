@@ -91,12 +91,15 @@ const appNavigation = [
         >
       </div>
 
-      <div class="border-t border-indigo-700 pb-3 pt-4">
+      <div
+        v-if="userStore.isLoggedIn"
+        class="border-t border-indigo-700 pb-3 pt-4"
+      >
         <div class="flex items-center px-5">
           <div class="flex-shrink-0">
             <img
               v-if="userStore.user?.photoURL && userStore.user.photoURL !== ''"
-              class="h-8 w-8 rounded-full"
+              class="h-8 w-8 rounded-full object-cover"
               :src="userStore.user.photoURL"
               alt=""
             />
