@@ -8,6 +8,7 @@ import CollaboratorMenu from "./CollaboratorMenu.vue";
 import CollaboratorModal from "./CollaboratorModal.vue";
 
 const collaboratorStore = useCollaborators();
+collaboratorStore.fetchItems();
 const open = ref(false);
 
 const addCollaborator = () => {
