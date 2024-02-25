@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  onSnapshot,
   QueryDocumentSnapshot,
   setDoc,
   updateDoc,
@@ -54,90 +55,90 @@ export const useCollaborators = defineStore("collaborators", () => {
   const uuid = computed(() => userStore.user?.uid);
   const productStore = useProducts();
 
-  // if (uuid.value && productStore.selectedItemId) {
-  //   onSnapshot(
-  //     collection(
-  //       db,
-  //       ROOT_USERDATA_COLLECTION,
-  //       uuid.value,
-  //       productStore.collectionName,
-  //       productStore.selectedItemId.toString(),
-  //       ITEM_PATH,
-  //     ),
-  //     (querySnapshot) => {
-  //       console.log(
-  //         "Received collaborator update at ",
-  //         new Date().toISOString(),
-  //       );
-  //       const updatedItems: CollaboratorWithId[] = [];
-  //       querySnapshot.forEach((doc) => {
-  //         if (doc.metadata.hasPendingWrites) return;
-  //         const existingItem = items.value.find((item) => item.id === doc.id);
-  //         if (existingItem) {
-  //           // Update existing item
-  //           existingItem.id = doc.id;
-  //           updatedItems.push(existingItem);
-  //         } else {
-  //           // Add new item
-  //           updatedItems.push({
-  //             ...(doc.data() as Collaborator),
-  //             id: doc.id,
-  //             type: "collaborator",
-  //           });
-  //         }
-  //       });
+  if (uuid.value && productStore.selectedItemId) {
+    onSnapshot(
+      collection(
+        db,
+        ROOT_USERDATA_COLLECTION,
+        uuid.value,
+        productStore.collectionName,
+        productStore.selectedItemId.toString(),
+        ITEM_PATH,
+      ),
+      (querySnapshot) => {
+        console.log(
+          "Received collaborator update at ",
+          new Date().toISOString(),
+        );
+        const updatedItems: CollaboratorWithId[] = [];
+        querySnapshot.forEach((doc) => {
+          if (doc.metadata.hasPendingWrites) return;
+          const existingItem = items.value.find((item) => item.id === doc.id);
+          if (existingItem) {
+            // Update existing item
+            existingItem.id = doc.id;
+            updatedItems.push(existingItem);
+          } else {
+            // Add new item
+            updatedItems.push({
+              ...(doc.data() as Collaborator),
+              id: doc.id,
+              type: "collaborator",
+            });
+          }
+        });
 
-  //       // Remove deleted items
-  //       items.value = updatedItems
-  //         .filter((item) =>
-  //           querySnapshot.docs.some((doc) => doc.id === item.id),
-  //         )
-  //         .concat(
-  //           items.value.filter((item) => item.type === "collaborator_invite"),
-  //         );
-  //     },
-  //   );
-  //   onSnapshot(
-  //     collection(
-  //       db,
-  //       ROOT_USERDATA_COLLECTION,
-  //       uuid.value,
-  //       productStore.collectionName,
-  //       productStore.selectedItemId.toString(),
-  //       "collaborator_invites",
-  //     ),
-  //     (querySnapshot) => {
-  //       console.log(
-  //         "Updating collaborator_invites at",
-  //         new Date().toISOString(),
-  //       );
-  //       const updatedItems: CollaboratorWithId[] = [];
-  //       querySnapshot.forEach((doc) => {
-  //         if (doc.metadata.hasPendingWrites) return;
-  //         const existingItem = items.value.find((item) => item.id === doc.id);
-  //         if (existingItem) {
-  //           // Update existing item
-  //           existingItem.id = doc.id;
-  //           updatedItems.push(existingItem);
-  //         } else {
-  //           // Add new item
-  //           updatedItems.push({
-  //             ...(doc.data() as Collaborator),
-  //             id: doc.id,
-  //             type: "collaborator",
-  //           });
-  //         }
-  //       });
+        // Remove deleted items
+        items.value = updatedItems
+          .filter((item) =>
+            querySnapshot.docs.some((doc) => doc.id === item.id),
+          )
+          .concat(
+            items.value.filter((item) => item.type === "collaborator_invite"),
+          );
+      },
+    );
+    onSnapshot(
+      collection(
+        db,
+        ROOT_USERDATA_COLLECTION,
+        uuid.value,
+        productStore.collectionName,
+        productStore.selectedItemId.toString(),
+        "collaborator_invites",
+      ),
+      (querySnapshot) => {
+        console.log(
+          "Updating collaborator_invites at",
+          new Date().toISOString(),
+        );
+        const updatedItems: CollaboratorWithId[] = [];
+        querySnapshot.forEach((doc) => {
+          if (doc.metadata.hasPendingWrites) return;
+          const existingItem = items.value.find((item) => item.id === doc.id);
+          if (existingItem) {
+            // Update existing item
+            existingItem.id = doc.id;
+            updatedItems.push(existingItem);
+          } else {
+            // Add new item
+            updatedItems.push({
+              ...(doc.data() as Collaborator),
+              id: doc.id,
+              type: "collaborator",
+            });
+          }
+        });
 
-  //       // Remove deleted items
-  //       items.value = updatedItems
-  //         .filter((item) =>
-  //           querySnapshot.docs.some((doc) => doc.id === item.id),
-  //         )
-  //         .concat(items.value.filter((item) => item.type === "collaborator"));
-  //     },
-  //   );
-  // }
+        // Remove deleted items
+        items.value = updatedItems
+          .filter((item) =>
+            querySnapshot.docs.some((doc) => doc.id === item.id),
+          )
+          .concat(items.value.filter((item) => item.type === "collaborator"));
+      },
+    );
+  }
 
   const fetchItems = async () => {
     if (!userStore.user?.uid || !productStore.selectedItemId) return;
