@@ -3,11 +3,13 @@ import { UserCircleIcon } from "@heroicons/vue/24/outline";
 import { computed, ref } from "vue";
 
 import { useCollaborators } from "@/stores/useCollaborators";
+import { useProducts } from "@/stores/useProducts";
 
 import CollaboratorMenu from "./CollaboratorMenu.vue";
 import CollaboratorModal from "./CollaboratorModal.vue";
 
 const collaboratorStore = useCollaborators();
+const productStore = useProducts();
 collaboratorStore.fetchItems();
 const open = ref(false);
 
@@ -38,7 +40,10 @@ const computedItems = computed(() => collaboratorStore.items);
         </p>
       </div>
 
-      <div class="ml-4 mt-4 flex flex-shrink-0 gap-2">
+      <div
+        v-if="productStore.selectedProduct?.role === 'owner'"
+        class="ml-4 mt-4 flex flex-shrink-0 gap-2"
+      >
         <button class="button outline" @click="addCollaborator">
           Instant add
         </button>

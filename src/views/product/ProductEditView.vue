@@ -6,6 +6,8 @@ import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
+import ProductDisplay from "./ProductDisplay.vue";
+
 const productId = useSelectedProductId();
 const productStore = useProducts();
 const product = computed<ProductWithId | undefined>(() =>
@@ -14,5 +16,9 @@ const product = computed<ProductWithId | undefined>(() =>
 </script>
 
 <template>
-  <ProductEdit v-if="product" :product="product" />
+  <div v-if="product">
+    <ProductEdit v-if="product.role === 'owner'" :product="product" />
+
+    <ProductDisplay v-else :product="product" />
+  </div>
 </template>

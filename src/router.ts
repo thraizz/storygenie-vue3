@@ -122,7 +122,7 @@ export const router = createRouter({
             },
             {
               path: "settings",
-              component: () => import("./views/product/Settings.vue"),
+              component: () => import("./views/product/ProductEditView.vue"),
             },
             {
               path: "collaborators",
