@@ -1,35 +1,63 @@
 <script setup lang="ts">
 import { Cog8ToothIcon } from "@heroicons/vue/24/outline";
 import { PhListChecks, PhUsers } from "@phosphor-icons/vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-import { useSelectedProductId } from "@/composables/useSelectedProduct";
+import { useProducts } from "@/stores/useProducts";
 
-const selectedProductId = useSelectedProductId();
+const productStore = useProducts();
+const router = useRouter();
+const route = useRoute();
+
+// Compute navigation items which the user can see based on their role
 const navigation = computed(() => {
-  const baseUrl = `/products/${selectedProductId.value}`;
+  const baseUrl = `/products/${productStore.selectedItemId}`;
 
-  return [
+  const navItems: {
+    name: string;
+    href: string;
+    icon: any;
+    exact: boolean;
+  }[] = [
     {
       name: "Stories",
       href: `${baseUrl}`,
       icon: PhListChecks,
       exact: true,
     },
-    {
+  ];
+  if (productStore.selectedProduct?.role === "owner") {
+    navItems.push({
       name: "Collaborators",
       href: `${baseUrl}/collaborators/`,
       icon: PhUsers,
       exact: false,
-    },
-    {
+    });
+    navItems.push({
       name: "Settings",
       href: `${baseUrl}/settings`,
       icon: Cog8ToothIcon,
       exact: true,
-    },
-  ];
+    });
+  }
+
+  return navItems;
 });
+
+// Redirect to index if not owner
+watch(
+  () => productStore.selectedProduct?.role === "collaborator",
+  (isCollaborator) => {
+    if (
+      (isCollaborator && route.path.includes("collaborators")) ||
+      route.path.includes("settings")
+    ) {
+      router.push(`/products/${productStore.selectedItemId}`);
+    }
+  },
+);
+
 const activeClass = "bg-gray-50 text-indigo-600";
 </script>
 

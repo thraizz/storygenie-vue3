@@ -79,7 +79,7 @@ export const router = createRouter({
         },
         {
           path: ":productId",
-          component: () => import("./views/product/Product.vue"),
+          component: () => import("./layout/Product.vue"),
           meta: {
             showProductPicker: true,
             showProductAsTitle: true,
