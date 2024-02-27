@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   getDocsFromServer,
+  onSnapshot,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -13,7 +14,7 @@ import { useRouter } from "vue-router";
 import { db } from "@/firebase";
 import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
-import { StoryWithId } from "@/types/story";
+import { Story, StoryWithId } from "@/types/story";
 
 import { useProducts } from "./useProducts";
 
@@ -53,19 +54,21 @@ export const useStories = defineStore(ITEM_PATH, () => {
       : null,
   );
 
-  // if (storiesCollection.value) {
-  //   onSnapshot(storiesCollection.value, (querySnapshot) => {
-  //     console.log("Received new stories at " + new Date().toISOString());
-  //     querySnapshot.forEach((doc) => {
-  //       if (doc.metadata.hasPendingWrites) return;
-  //       items.value = items.value.filter((item) => item.id !== doc.id);
-  //       items.value.push({
-  //         ...(doc.data() as Story),
-  //         id: doc.id,
-  //       });
-  //     });
-  //   });
-  // }
+  const watchStories = () => {
+    if (storiesCollection.value) {
+      onSnapshot(storiesCollection.value, (querySnapshot) => {
+        console.log("Received new stories at " + new Date().toISOString());
+        querySnapshot.forEach((doc) => {
+          if (doc.metadata.hasPendingWrites) return;
+          items.value = items.value.filter((item) => item.id !== doc.id);
+          items.value.push({
+            ...(doc.data() as Story),
+            id: doc.id,
+          });
+        });
+      });
+    }
+  };
 
   const fetchItems = async () => {
     if (!storiesCollection.value) return;
@@ -121,5 +124,6 @@ export const useStories = defineStore(ITEM_PATH, () => {
     items,
     fetchItems,
     deleteStory,
+    watchStories,
   };
 });

@@ -12,6 +12,7 @@ type FormSchema = {
 };
 
 const templateStore = useTemplates();
+templateStore.fetchItems();
 const formSchema = {
   name: string().required("Name is required."),
   description: string().required("Instruction is required."),

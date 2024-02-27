@@ -16,7 +16,10 @@ watch(
 );
 watch(
   () => productStore.items,
-  () => storyStore.fetchItems(),
+  () => {
+    storyStore.fetchItems();
+    storyStore.watchStories();
+  },
   { immediate: true },
 );
 

@@ -36,6 +36,7 @@ const { handleSubmit } = useForm<FormData>({
 });
 
 const templateStore = useTemplates();
+templateStore.fetchItems();
 const { user } = useUser();
 const selectedProduct = useSelectedProductId();
 
