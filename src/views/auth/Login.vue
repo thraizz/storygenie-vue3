@@ -6,6 +6,9 @@ import { string } from "yup";
 
 import GoogleSSO from "@/components/GoogleSSO.vue";
 import { logInWithFirebase, useUser } from "@/stores/useUser";
+
+import Auth from "./Auth.vue";
+
 const router = useRouter();
 
 type FormData = {
@@ -66,13 +69,7 @@ watch(
   <div
     class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"
   >
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2
-        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
-      >
-        Sign in to your account
-      </h2>
-    </div>
+    <Auth />
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" @submit="onSubmit">

@@ -7,6 +7,9 @@ import { string } from "yup";
 
 import { auth } from "@/firebase";
 import { logInWithFirebase, useUser } from "@/stores/useUser";
+
+import Auth from "./Auth.vue";
+
 type FormData = {
   email: string;
   password: string;
@@ -70,13 +73,7 @@ watch(
   <div
     class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"
   >
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2
-        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
-      >
-        Create an account
-      </h2>
-    </div>
+    <Auth />
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" @submit="onSubmit">
@@ -87,7 +84,7 @@ watch(
             >Email address</label
           >
 
-          <div class="mt-2">
+          <div>
             <input
               id="email"
               v-model="email"
@@ -109,7 +106,7 @@ watch(
             >Password</label
           >
 
-          <div class="mt-2">
+          <div>
             <input
               id="password"
               v-model="password"
@@ -131,7 +128,7 @@ watch(
             >Confirm Password</label
           >
 
-          <div class="mt-2">
+          <div>
             <input
               id="confirmPassword"
               v-model="confirmPassword"

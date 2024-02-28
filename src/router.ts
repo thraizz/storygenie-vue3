@@ -26,14 +26,14 @@ export const router = createRouter({
       path: "/login",
       component: () => import("./views/auth/Login.vue"),
       meta: {
-        title: "Login",
+        title: "Sign in to your account",
       },
     },
     {
       path: "/register",
       component: () => import("./views/auth/Registration.vue"),
       meta: {
-        title: "Registration",
+        title: "Create an account",
       },
     },
     {
