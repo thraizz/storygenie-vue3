@@ -21,6 +21,7 @@ const addCollaborator = () => {
 };
 
 const computedItems = computed(() => collaboratorStore.items);
+const isDev = import.meta.env.DEV;
 </script>
 
 <template>
@@ -44,7 +45,7 @@ const computedItems = computed(() => collaboratorStore.items);
         v-if="productStore.selectedProduct?.role === 'owner'"
         class="ml-4 mt-4 flex flex-shrink-0 gap-2"
       >
-        <button class="button outline" @click="addCollaborator">
+        <button v-if="isDev" class="button outline" @click="addCollaborator">
           Instant add
         </button>
 
