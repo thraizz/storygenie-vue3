@@ -26,8 +26,14 @@ const tabs = computed(() => [
         id="tabs"
         name="tabs"
         class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        @change="(event: any) => $router.push(event.target?.value)"
       >
-        <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
+        <option
+          v-for="tab in tabs"
+          :key="tab.name"
+          :value="tab.href"
+          :selected="tab.current"
+        >
           {{ tab.name }}
         </option>
       </select>
