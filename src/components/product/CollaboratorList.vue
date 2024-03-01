@@ -56,11 +56,18 @@ const isDev = import.meta.env.DEV;
     </div>
   </div>
 
-  <ul
-    v-if="computedItems.length > 0"
-    role="list"
-    class="divide-y divide-gray-100 px-4"
+  <p v-if="collaboratorStore.isLoading" class="pl-5 pt-2 text-sm text-gray-500">
+    Loading...
+  </p>
+
+  <p
+    v-else-if="computedItems.length === 0"
+    class="pl-5 pt-2 text-sm text-gray-500"
   >
+    No collaborators yet.
+  </p>
+
+  <ul v-else role="list" class="divide-y divide-gray-100 px-4">
     <li
       v-for="collaborator in computedItems"
       :key="collaborator.id"
@@ -91,6 +98,4 @@ const isDev = import.meta.env.DEV;
       <CollaboratorMenu :collaborator="collaborator" />
     </li>
   </ul>
-
-  <p v-else class="pl-5 pt-2 text-sm text-gray-500">No collaborators yet.</p>
 </template>

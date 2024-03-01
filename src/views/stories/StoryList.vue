@@ -1,37 +1,25 @@
 <script setup lang="ts">
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { useProducts } from "@/stores/useProducts";
 import { useStories } from "@/stores/useStories";
 import { getHeadlineFromDoc } from "@/types/story";
 const storyStore = useStories();
-const productStore = useProducts();
+storyStore.fetchIfEmpty();
 
 const selectedProductId = useSelectedProductId();
-watch(
-  () => selectedProductId.value,
-  () => storyStore.fetchItems(),
-);
-watch(
-  () => productStore.items,
-  () => {
-    storyStore.fetchItems();
-    storyStore.watchStories();
-  },
-  { immediate: true },
-);
-
 const items = computed(() => storyStore.items);
 </script>
 
 <template>
-  <p v-if="items.length === 0">
-    No stories have been created for this product yet.
-  </p>
+  <p v-if="storyStore.isLoading">Loading stories...</p>
 
-  <ul v-else role="list" class="divide-y divide-gray-100">
+  <ul
+    v-else-if="storyStore.items.length > 0"
+    role="list"
+    class="divide-y divide-gray-100"
+  >
     <li
       v-for="item in items"
       :key="item.id"
@@ -57,4 +45,9 @@ const items = computed(() => storyStore.items);
       </div>
     </li>
   </ul>
+
+  <p v-else>
+    No stories have been created yet.<br />
+    Create a story by clicking the button above.
+  </p>
 </template>

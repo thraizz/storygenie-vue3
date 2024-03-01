@@ -14,9 +14,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
-import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { db } from "@/firebase";
 import {
   ROOT_INVITES_COLLECTION,
@@ -49,6 +48,7 @@ const mapDoc: (doc: QueryDocumentSnapshot) => CollaboratorWithId = (doc) => ({
 export const useCollaborators = defineStore("collaborators", () => {
   // State
   const items = ref<CollaboratorWithId[]>([]);
+  const isLoading = ref(false);
 
   // Utils
   const userStore = useUser();
@@ -66,6 +66,7 @@ export const useCollaborators = defineStore("collaborators", () => {
         ITEM_PATH,
       ),
       (querySnapshot) => {
+        isLoading.value = true;
         console.log(
           "Received collaborator update at ",
           new Date().toISOString(),
@@ -96,6 +97,7 @@ export const useCollaborators = defineStore("collaborators", () => {
           .concat(
             items.value.filter((item) => item.type === "collaborator_invite"),
           );
+        isLoading.value = false;
       },
     );
     onSnapshot(
@@ -108,6 +110,7 @@ export const useCollaborators = defineStore("collaborators", () => {
         "collaborator_invites",
       ),
       (querySnapshot) => {
+        isLoading.value = true;
         console.log(
           "Updating collaborator_invites at",
           new Date().toISOString(),
@@ -136,12 +139,15 @@ export const useCollaborators = defineStore("collaborators", () => {
             querySnapshot.docs.some((doc) => doc.id === item.id),
           )
           .concat(items.value.filter((item) => item.type === "collaborator"));
+        isLoading.value = false;
       },
     );
   }
 
   const fetchItems = async () => {
     if (!userStore.user?.uid || !productStore.selectedItemId) return;
+
+    isLoading.value = true;
     const itemsCollection = collection(
       db,
       ROOT_USERDATA_COLLECTION,
@@ -172,6 +178,8 @@ export const useCollaborators = defineStore("collaborators", () => {
     );
 
     items.value = itemsList;
+
+    isLoading.value = false;
   };
 
   const setAttributeOfItem = async (item: CollaboratorWithId, text: string) => {
@@ -192,7 +200,7 @@ export const useCollaborators = defineStore("collaborators", () => {
       },
     );
 
-    fetchItems();
+    await fetchItems();
   };
 
   const putItem = async (item: CollaboratorWithId) => {
@@ -211,7 +219,7 @@ export const useCollaborators = defineStore("collaborators", () => {
       item,
     );
 
-    fetchItems();
+    await fetchItems();
   };
 
   const postItem = async (item: Collaborator) => {
@@ -252,7 +260,7 @@ export const useCollaborators = defineStore("collaborators", () => {
       ),
     ]);
 
-    fetchItems();
+    await fetchItems();
   };
 
   const getItem = (id: string) => {
@@ -261,8 +269,8 @@ export const useCollaborators = defineStore("collaborators", () => {
 
   const deleteItem = async (collaborator: CollaboratorWithId) => {
     if (uuid.value === undefined || !productStore.selectedItemId) return;
+    console.log(collaborator);
 
-    console.log("Deleting ", collaborator);
     await deleteDoc(
       doc(
         db,
@@ -273,7 +281,9 @@ export const useCollaborators = defineStore("collaborators", () => {
         collaborator.type === "collaborator_invite"
           ? "collaborator_invites"
           : "collaborators",
-        collaborator.id,
+        collaborator.type === "collaborator_invite"
+          ? collaborator.email
+          : collaborator.id,
       ),
     );
 
@@ -283,26 +293,17 @@ export const useCollaborators = defineStore("collaborators", () => {
           db,
           ROOT_INVITES_COLLECTION,
           collaborator.email,
-
           productStore.collectionName,
           productStore.selectedItemId.toString(),
         ),
       );
     }
     await new Promise((resolve) => setTimeout(resolve, 300));
-    fetchItems();
+    await fetchItems();
   };
 
   // Util
-  useRefetchOnAuthChange(fetchItems);
-  watch(
-    () => userStore.isLoggedIn,
-    (isLoggedIn) => {
-      if (isLoggedIn) {
-        fetchItems();
-      }
-    },
-  );
+  // useRefetchOnAuthChange(fetchItems);
 
   return {
     setAttributeOfItem,
@@ -312,5 +313,6 @@ export const useCollaborators = defineStore("collaborators", () => {
     items,
     fetchItems,
     getItem,
+    isLoading,
   };
 });

@@ -7,9 +7,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
-import { useRefetchOnAuthChange } from "@/composables/refetchWhenLoggedIn";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
 import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
@@ -25,15 +24,6 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
   const selectedItemId = useSelectedProductId();
 
   const uuid = computed(() => userStore.user?.uid);
-
-  watch(
-    () => userStore.isLoggedIn,
-    (isLoggedIn) => {
-      if (isLoggedIn) {
-        fetchItems();
-      }
-    },
-  );
 
   const fetchItems = async () => {
     if (!userStore.user?.uid) return;
@@ -51,7 +41,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
 
     items.value = itemsList;
   };
-  useRefetchOnAuthChange(fetchItems);
+  // useRefetchOnAuthChange(fetchItems);
 
   const setAttributeOfItem = async (item: TemplateWithId, text: string) => {
     if (uuid.value === undefined) return;
@@ -62,7 +52,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
         text,
       },
     );
-    fetchItems();
+    await fetchItems();
   };
 
   const putItem = async (item: TemplateWithId) => {
@@ -72,7 +62,7 @@ export const useTemplates = defineStore(ITEM_PATH, () => {
       doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
       item,
     );
-    fetchItems();
+    await fetchItems();
   };
 
   const postItem = async (item: Template) => {

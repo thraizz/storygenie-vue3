@@ -1,15 +1,12 @@
-import { watch } from "vue";
+import { getAuth } from "firebase/auth";
 
-import { useUser } from "@/stores/useUser";
+import { app } from "@/firebase";
 
 export const useRefetchOnAuthChange = (fetchItems: () => void) => {
-  const userStore = useUser();
-  watch(
-    () => userStore.isLoggedIn,
-    (isLoggedIn) => {
-      if (isLoggedIn) {
-        fetchItems();
-      }
-    },
-  );
+  const auth = getAuth(app);
+  auth.onAuthStateChanged((u) => {
+    if (u && !u?.isAnonymous) {
+      fetchItems();
+    }
+  });
 };

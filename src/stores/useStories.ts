@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { db } from "@/firebase";
@@ -22,6 +22,7 @@ const ITEM_PATH = "stories";
 
 export const useStories = defineStore(ITEM_PATH, () => {
   const items = ref<StoryWithId[]>([]);
+  const isLoading = ref(false);
 
   const userStore = useUser();
   const productStore = useProducts();
@@ -29,15 +30,6 @@ export const useStories = defineStore(ITEM_PATH, () => {
 
   const uuid = computed(() => userStore.user?.uid);
   const selectedProduct = computed(() => productStore.selectedProduct);
-
-  watch(
-    () => userStore.isLoggedIn,
-    (isLoggedIn) => {
-      if (isLoggedIn) {
-        fetchItems();
-      }
-    },
-  );
 
   const storiesCollection = computed(() =>
     uuid.value && productStore.selectedItemId
@@ -73,6 +65,8 @@ export const useStories = defineStore(ITEM_PATH, () => {
   const fetchItems = async () => {
     if (!storiesCollection.value) return;
 
+    isLoading.value = true;
+
     try {
       // Get timestamp before fetch
       console.log("Fetching items at " + new Date().toISOString());
@@ -86,7 +80,10 @@ export const useStories = defineStore(ITEM_PATH, () => {
       console.error("Error fetching items", e);
       router.push("/");
     }
+
+    isLoading.value = false;
   };
+  // useRefetchOnAuthChange(fetchItems);
 
   const setAttributeOfItem = async (item: StoryWithId, text: string) => {
     if (uuid.value === undefined) return;
@@ -102,7 +99,7 @@ export const useStories = defineStore(ITEM_PATH, () => {
       text,
     });
 
-    fetchItems();
+    await fetchItems();
   };
 
   const putItem = async (item: StoryWithId) => {
@@ -115,7 +112,13 @@ export const useStories = defineStore(ITEM_PATH, () => {
     if (!storiesCollection.value) return;
     await deleteDoc(doc(storiesCollection.value, item.id));
 
-    fetchItems();
+    await fetchItems();
+  };
+
+  const fetchIfEmpty = async () => {
+    if (items.value.length === 0) {
+      await fetchItems();
+    }
   };
 
   return {
@@ -125,5 +128,7 @@ export const useStories = defineStore(ITEM_PATH, () => {
     fetchItems,
     deleteStory,
     watchStories,
+    fetchIfEmpty,
+    isLoading,
   };
 });
