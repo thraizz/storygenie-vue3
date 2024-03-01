@@ -58,12 +58,11 @@ export const router = createRouter({
       path: "/products/",
       meta: {
         requiresAuth: true,
-        showStoryCreation: true,
       },
       children: [
         {
           path: "",
-          component: () => import("./views/product/ProductSelection.vue"),
+          component: () => import("./views/product/ProductList.vue"),
           meta: {
             title: "Choose a product",
             requiresAuth: true,
@@ -83,6 +82,7 @@ export const router = createRouter({
           meta: {
             showProductPicker: true,
             showProductAsTitle: true,
+            showStoryCreation: true,
           },
           children: [
             {

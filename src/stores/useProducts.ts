@@ -21,17 +21,20 @@ import { Product, ProductWithId } from "@/types/product";
 const ITEM_PATH = "products";
 
 export const useProducts = defineStore(ITEM_PATH, () => {
+  // State
   const items = ref<ProductWithId[]>([]);
   const productReferencesItems = ref<
     { reference: DocumentReference; id: string }[]
   >([]);
-  const userStore = useUser();
+  const isLoading = ref(false);
 
+  // Utils
+  const userStore = useUser();
   const selectedItemId = useSelectedProductId();
+
   const selectedProduct = computed(() =>
     items.value.find((item) => item.id === selectedItemId.value),
   );
-
   const uuid = computed(() => userStore.user?.uid);
 
   // if (uuid.value) {
@@ -115,6 +118,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
   const fetchItems = async () => {
     if (!userStore.user?.uid) return;
 
+    isLoading.value = true;
     const itemsCollection = collection(
       db,
       ROOT_USERDATA_COLLECTION,
@@ -163,6 +167,8 @@ export const useProducts = defineStore(ITEM_PATH, () => {
     }
 
     items.value = itemsList;
+
+    isLoading.value = false;
   };
 
   const setAttributeOfItem = async (item: ProductWithId, text: string) => {
@@ -212,6 +218,7 @@ export const useProducts = defineStore(ITEM_PATH, () => {
   };
 
   return {
+    isLoading,
     setAttributeOfItem,
     putItem,
     postItem,

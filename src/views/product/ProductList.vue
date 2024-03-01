@@ -11,6 +11,13 @@ storyStore.items = [];
 </script>
 
 <template>
+  <p
+    v-if="productStore.isLoading && productStore.items.length === 0"
+    class="flex justify-center"
+  >
+    Loading products...
+  </p>
+
   <ul
     v-if="productStore.items.length > 0"
     role="list"
@@ -23,7 +30,7 @@ storyStore.items = [];
     />
   </ul>
 
-  <p v-else>
+  <p v-else-if="!productStore.isLoading">
     No products have been created yet.<br />
     Create a product by clicking the button above.
   </p>
