@@ -12,3 +12,5 @@ exports.addcollaboratorhook = require("./addCollaboratorHook").addCollaborator;
 
 exports.removecollaboratorhook =
   require("./removeCollaboratorHook").removeCollaboratorFromProduct;
+
+exports.removeuserhook = require("./removeUserHook").removeUserHook;
