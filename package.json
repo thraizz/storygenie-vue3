@@ -10,7 +10,8 @@
     "test": "vitest --bail 0 --run --passWithNoTests",
     "lint": "eslint --ext .ts,.vue src",
     "typecheck": "vue-tsc",
-    "emulate": "npx firebase emulators:start --import firebaseEmulatorData --export-on-exit",
+    "emulate": "npx firebase emulators:start --import firebaseEmulatorData",
+    "emulate:export": "npx firebase emulators:start --import firebaseEmulatorData --export-on-exit",
     "prepare": "husky"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@tiptap/starter-kit": "^2.2.3",
     "@tiptap/vue-3": "^2.2.3",
     "axios": "^1.6.7",
+    "clipboard-polyfill": "^4.0.2",
     "firebase": "^10.8.0",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.5",
