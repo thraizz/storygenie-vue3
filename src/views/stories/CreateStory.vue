@@ -38,7 +38,7 @@ const { handleSubmit } = useForm<FormData>({
 const templateStore = useTemplates();
 templateStore.fetchItems();
 const { user } = useUser();
-const selectedProduct = useSelectedProductId();
+const selectedProductId = useSelectedProductId();
 
 const isLoading = ref(false);
 const onSubmit = handleSubmit(
@@ -51,13 +51,13 @@ const onSubmit = handleSubmit(
     var addMessage = httpsCallable(functions, "generatestory");
     addMessage({
       uid,
-      productId: selectedProduct.value,
+      productId: selectedProductId.value,
       templateId: templateId,
       description: values.description,
     })
       .then((result: any) => {
         router.push(
-          `/products/${selectedProduct.value}/story/${result.data?.result}`,
+          `/products/${selectedProductId.value}/story/${result.data?.result}`,
         );
         isLoading.value = false;
       })

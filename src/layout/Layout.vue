@@ -9,9 +9,6 @@ import { useProducts } from "@/stores/useProducts";
 
 const selectedProduct = useSelectedProductId();
 const productStore = useProducts();
-const product = computed(() =>
-  productStore.getItem(selectedProduct.value.toString() || ""),
-);
 
 const route = useRoute();
 const cta = computed(() => {
@@ -41,7 +38,7 @@ const title = computed(() => {
   if (route.meta.title) {
     return route.meta.title;
   } else if (route.meta.showProductAsTitle) {
-    return product.value?.name;
+    return productStore.selectedProduct?.name;
   }
 
   return "";

@@ -93,15 +93,6 @@ export const router = createRouter({
               },
             },
             {
-              path: "edit",
-              component: () => import("./views/product/ProductEditView.vue"),
-              meta: {
-                title: "Edit Product",
-                showBack: true,
-                requiresAuth: true,
-              },
-            },
-            {
               path: "story/:id",
               component: () => import("./views/stories/Story.vue"),
               meta: {
@@ -122,7 +113,12 @@ export const router = createRouter({
             },
             {
               path: "settings",
-              component: () => import("./views/product/ProductEditView.vue"),
+              component: () => import("./views/product/ProductSettings.vue"),
+              meta: {
+                title: "Product Settings",
+                showBack: true,
+                requiresAuth: true,
+              },
             },
             {
               path: "collaborators",

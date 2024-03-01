@@ -10,7 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { db } from "@/firebase";
@@ -216,6 +216,9 @@ export const useProducts = defineStore(ITEM_PATH, () => {
       await fetchItems();
     }
   };
+
+  // Initialize store
+  watch(uuid, fetchIfEmpty);
 
   return {
     isLoading,
