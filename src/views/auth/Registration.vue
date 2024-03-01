@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useField, useForm } from "vee-validate";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
-import { string } from "yup";
+import { object, string } from "yup";
 
 import { auth } from "@/firebase";
 import { logInWithFirebase, useUser } from "@/stores/useUser";
@@ -16,11 +16,21 @@ type FormData = {
   confirmPassword: string;
 };
 const { handleSubmit, resetForm, setErrors } = useForm<FormData>({
-  validationSchema: {
-    email: string().required().email(),
-    password: string().required().min(6),
-    confirmPassword: string(),
-  },
+  validationSchema: object().shape({
+    email: string()
+      .required("This field is required.")
+      .email("Please enter a valid email."),
+    password: string()
+      .required("This field is required.")
+      .min(6, "Password must be at least 6 characters."),
+    confirmPassword: string().test(
+      "password-should-match",
+      "Passwords must match.",
+      function (value) {
+        return this.parent.password === value;
+      },
+    ),
+  }),
   initialValues: {
     email: "",
     password: "",
