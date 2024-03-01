@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PhCircleNotch } from "@phosphor-icons/vue";
 import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -32,7 +33,7 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
 </script>
 
 <template>
-  <form class="flex flex-col gap-4">
+  <form :disabled="isLoading" class="flex flex-col gap-4" @submit="onSubmit">
     <h3>Create Template</h3>
 
     <div>
@@ -61,13 +62,17 @@ const onSubmit = handleSubmit(async (values: FormSchema) => {
     </div>
 
     <button
-      :disabled="isLoading"
-      type="submit"
       class="button primary"
       :class="[isLoading && 'is-loading']"
-      @click="onSubmit"
+      type="submit"
+      :disabled="isLoading"
     >
-      Create
+      <div v-if="isLoading" class="flex gap-1">
+        <PhCircleNotch class="left-0 h-5 w-5 animate-spin self-center" />
+        Creating template...
+      </div>
+
+      <div v-else>Create</div>
     </button>
   </form>
 </template>

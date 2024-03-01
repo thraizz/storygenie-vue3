@@ -115,8 +115,8 @@ const onSubmit = handleSubmit(
     </label>
 
     <button
-      class="button primary relative"
-      :class="[isLoading && 'is-loading opacity-80']"
+      class="button primary"
+      :class="[isLoading && 'is-loading']"
       type="submit"
       :disabled="isLoading"
     >

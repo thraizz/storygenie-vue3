@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PhCircleNotch } from "@phosphor-icons/vue";
 import { Timestamp } from "firebase/firestore";
 import { ErrorMessage, Field, useForm } from "vee-validate";
 import { ref } from "vue";
@@ -81,7 +82,12 @@ const onSubmit = handleSubmit(async (values) => {
       :class="[isLoading && 'is-loading']"
       type="submit"
     >
-      Create
+      <div v-if="isLoading" class="flex gap-1">
+        <PhCircleNotch class="left-0 h-5 w-5 animate-spin self-center" />
+        Creating product...
+      </div>
+
+      <div v-else>Create</div>
     </button>
   </form>
 </template>
