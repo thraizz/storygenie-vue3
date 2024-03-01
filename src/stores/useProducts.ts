@@ -3,6 +3,7 @@ import {
   collection,
   doc,
   DocumentReference,
+  getDoc,
   getDocs,
   QueryDocumentSnapshot,
   setDoc,
@@ -126,40 +127,40 @@ export const useProducts = defineStore(ITEM_PATH, () => {
       role: "owner",
     }));
 
-    // try {
-    //   const collaborationProducts = await getDocs(
-    //     collection(
-    //       db,
-    //       ROOT_USERDATA_COLLECTION,
-    //       userStore.user.uid,
-    //       "product_references",
-    //     ),
-    //   );
+    try {
+      const collaborationProducts = await getDocs(
+        collection(
+          db,
+          ROOT_USERDATA_COLLECTION,
+          userStore.user.uid,
+          "product_references",
+        ),
+      );
 
-    //   // Store references to other products
-    //   productReferencesItems.value = collaborationProducts.docs.map(docWithId);
+      // Store references to other products
+      productReferencesItems.value = collaborationProducts.docs.map(docWithId);
 
-    //   const productReferences = collaborationProducts.docs.map(
-    //     (doc) => doc.data().reference as DocumentReference,
-    //   );
+      const productReferences = collaborationProducts.docs.map(
+        (doc) => doc.data().reference as DocumentReference,
+      );
 
-    //   const products = await Promise.all(
-    //     productReferences.map(async (reference) => ({
-    //       product: await getDoc(reference),
-    //       reference,
-    //     })),
-    //   );
-    //   products.forEach(({ product, reference }) => {
-    //     itemsList.push({
-    //       ...product.data(),
-    //       id: product.id,
-    //       referencePath: reference.path,
-    //       role: "collaborator",
-    //     } as ProductWithId);
-    //   });
-    // } catch (e) {
-    //   console.error(e);
-    // }
+      const products = await Promise.all(
+        productReferences.map(async (reference) => ({
+          product: await getDoc(reference),
+          reference,
+        })),
+      );
+      products.forEach(({ product, reference }) => {
+        itemsList.push({
+          ...product.data(),
+          id: product.id,
+          referencePath: reference.path,
+          role: "collaborator",
+        } as ProductWithId);
+      });
+    } catch (e) {
+      console.error(e);
+    }
 
     items.value = itemsList;
   };
