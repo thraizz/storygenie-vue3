@@ -21,9 +21,9 @@ const cta = computed(() => {
       text: "Create Template",
     };
   }
-  if (route?.path === "/") {
+  if (route?.path === "/products") {
     return {
-      path: `/new`,
+      path: `/products/new`,
       text: "Create Product",
     };
   }

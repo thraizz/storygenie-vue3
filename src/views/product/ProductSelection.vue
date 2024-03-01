@@ -4,14 +4,13 @@ import { useProducts } from "@/stores/useProducts";
 import { useStories } from "@/stores/useStories";
 
 const productStore = useProducts();
+productStore.fetchIfEmpty();
 
 const storyStore = useStories();
 storyStore.items = [];
 </script>
 
 <template>
-  <h3 class="mb-4 text-lg font-semibold leading-3">Select a product</h3>
-
   <ul
     v-if="productStore.items.length > 0"
     role="list"

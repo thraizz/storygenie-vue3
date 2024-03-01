@@ -8,17 +8,9 @@ export const router = createRouter({
   routes: [
     {
       path: "/",
-      component: () => import("./views/product/ProductSelection.vue"),
+      redirect: "/products",
       meta: {
         title: "Home",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/new",
-      component: () => import("./views/product/ProductCreation.vue"),
-      meta: {
-        title: "Create Product",
         requiresAuth: true,
       },
     },
@@ -73,7 +65,15 @@ export const router = createRouter({
           path: "",
           component: () => import("./views/product/ProductSelection.vue"),
           meta: {
-            title: "Home",
+            title: "Choose a product",
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "new",
+          component: () => import("./views/product/ProductCreation.vue"),
+          meta: {
+            title: "Create Product",
             requiresAuth: true,
           },
         },
