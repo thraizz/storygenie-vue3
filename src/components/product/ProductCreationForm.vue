@@ -32,7 +32,7 @@ const onSubmit = handleSubmit(async (values) => {
     ...values,
     createdAt: Timestamp.now(),
   });
-  router.push(`/${id}`);
+  router.push(`/products/${id}`);
   isLoading.value = false;
 });
 </script>
