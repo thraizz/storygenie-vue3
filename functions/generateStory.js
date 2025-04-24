@@ -3,6 +3,8 @@ const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { FieldValue, getFirestore } = require("firebase-admin/firestore");
 const OpenAI = require("openai");
 
+const PROMPT_VERSION = 1.2;
+
 exports.generateStory = onCall(async (request) => {
   // Get the accessing users uid
   const uid = request.auth.uid;
@@ -62,6 +64,7 @@ exports.generateStory = onCall(async (request) => {
       content: storyAsTipTapDoc,
       prompt: request.data.description,
       updatedAt: FieldValue.serverTimestamp(),
+      promptVersion: PROMPT_VERSION,
     });
 
   console.log("Story written to database.");
@@ -85,14 +88,14 @@ const getTipTapDocFromOpenAI = async (product, template, story) => {
   });
 
   const res = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-mini",
     messages: [
       {
         role: "system",
         content: [
           {
             type: "text",
-            text: 'You generate a scrum story with a headline, userstory and acceptance criteria for the given product and description, according to the template. It must be in valid JSON format, like this: { "headline": string, "userStory": string, "acceptanceCriteria": string[] } The `headline` must be as short as possible. The `acceptanceCriteria` must be as specific as possible. No acceptance criteria beyond the specified input. Acceptance criteria and user story can reference the product description, but only in a way that is consistent with the template and beneficial.',
+            text: 'You generate precise scrum user stories with a headline, user story, and acceptance criteria based on the given product description. Output must be valid JSON: {"headline": string, "userStory": string, "acceptanceCriteria": string[]}. The headline should be concise (5-7 words). Acceptance criteria must be specific, testable, and directly related to the user story - no extraneous criteria beyond what\'s needed to fulfill the core functionality. Focus on technical implementation details rather than business outcomes. Never include logging, analytics, or general system behaviors unless explicitly requested.',
           },
         ],
       },
@@ -101,7 +104,16 @@ const getTipTapDocFromOpenAI = async (product, template, story) => {
         content: [
           {
             type: "text",
-            text: `Product: \n${product}\n\nTemplate: \n${template}`,
+            text: `The Product we are building is: \n${product}`,
+          },
+        ],
+      },
+      {
+        role: "system",
+        content: [
+          {
+            type: "text",
+            text: `The Template we are using is: \n${template}`,
           },
         ],
       },
@@ -115,7 +127,7 @@ const getTipTapDocFromOpenAI = async (product, template, story) => {
         ],
       },
     ],
-    temperature: 1,
+    temperature: 0.4,
     max_tokens: 3035,
     top_p: 1,
     frequency_penalty: 0,
