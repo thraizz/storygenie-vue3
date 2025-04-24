@@ -104,10 +104,9 @@ watch(
             <div class="text-sm">
               <router-link
                 to="#"
-                tabindex="1"
                 class="font-semibold text-indigo-600 hover:text-indigo-500"
-                >Forgot password?</router-link
-              >
+                >Forgot password?
+              </router-link>
             </div>
           </div>
 
@@ -133,18 +132,18 @@ watch(
         </div>
       </form>
 
-      <div className="mt-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-zinc-300" />
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-zinc-300" />
           </div>
 
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-neutral-800">Or</span>
+          <div class="relative flex justify-center text-sm">
+            <span class="bg-white px-2 text-neutral-800">Or</span>
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div class="mt-6 flex justify-center">
           <GoogleSSO />
         </div>
       </div>

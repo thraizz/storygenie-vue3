@@ -21,7 +21,7 @@ const tabs = computed(() => [
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <div class="sm:hidden">
       <label for="tabs" class="sr-only">Select a tab</label>
-      <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+
       <select
         id="tabs"
         name="tabs"
@@ -53,8 +53,8 @@ const tabs = computed(() => [
               'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium',
             ]"
             :aria-current="tab.current ? 'page' : undefined"
-            >{{ tab.name }}</RouterLink
-          >
+            >{{ tab.name }}
+          </RouterLink>
         </nav>
       </div>
     </div>

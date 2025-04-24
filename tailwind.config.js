@@ -1,12 +1,12 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,vue}"],
   theme: {
     fontFamily: {
       sans: ["'Source Sans 3'", ...defaultTheme.fontFamily.sans],
-      montserrat: ["Montserrat", ...defaultTheme.fontFamily.sans],
+      montserrat: ["Inter", ...defaultTheme.fontFamily.sans],
       "source-code": ["'Source Code Pro'", ...defaultTheme.fontFamily.mono],
     },
     extend: {

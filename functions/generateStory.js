@@ -60,6 +60,7 @@ exports.generateStory = onCall(async (request) => {
     .collection("stories")
     .add({
       content: storyAsTipTapDoc,
+      prompt: request.data.description,
       updatedAt: FieldValue.serverTimestamp(),
     });
 
@@ -70,7 +71,10 @@ exports.generateStory = onCall(async (request) => {
 
 const getTipTapDocFromOpenAI = async (product, template, story) => {
   if (!product || !template || !story) {
-    throw new HttpsError("invalid-argument", "product and description must be provided");
+    throw new HttpsError(
+      "invalid-argument",
+      "product and description must be provided",
+    );
   }
   if (!process.env.OPENAI_API_KEY) {
     throw new HttpsError("internal", "OpenAI API key is not set");
@@ -88,7 +92,7 @@ const getTipTapDocFromOpenAI = async (product, template, story) => {
         content: [
           {
             type: "text",
-            text: "You generate a scrum story with a headline, userstory and acceptance criteria for the given product and description, according to the template. It must be in valid JSON format, like this: { \"headline\": string, \"userStory\": string, \"acceptanceCriteria\": string[] } The `headline` must be as short as possible. The `acceptanceCriteria` must be as specific as possible. No acceptance criteria beyond the specified input. Acceptance criteria and user story can reference the product description, but only in a way that is consistent with the template and beneficial.",
+            text: 'You generate a scrum story with a headline, userstory and acceptance criteria for the given product and description, according to the template. It must be in valid JSON format, like this: { "headline": string, "userStory": string, "acceptanceCriteria": string[] } The `headline` must be as short as possible. The `acceptanceCriteria` must be as specific as possible. No acceptance criteria beyond the specified input. Acceptance criteria and user story can reference the product description, but only in a way that is consistent with the template and beneficial.',
           },
         ],
       },

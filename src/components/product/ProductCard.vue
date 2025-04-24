@@ -2,6 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/20/solid";
 
+import BaseCard from "@/components/base/BaseCard.vue";
 import { useProducts } from "@/stores/useProducts";
 import { ProductWithId } from "@/types/product";
 
@@ -17,11 +18,7 @@ defineProps({
 </script>
 
 <template>
-  <router-link
-    :key="item.id"
-    :to="`/products/${item.id}`"
-    class="overflow-hidden rounded-xl border border-gray-200 transition hover:shadow-lg"
-  >
+  <BaseCard :key="item.id" :to="`/products/${item.id}`">
     <div
       class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6"
     >
@@ -114,5 +111,5 @@ defineProps({
         </dd>
       </div>
     </dl>
-  </router-link>
+  </BaseCard>
 </template>
