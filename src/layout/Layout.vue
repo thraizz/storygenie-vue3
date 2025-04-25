@@ -60,7 +60,7 @@ const title = computed(() => {
 
           <router-link
             v-if="$route.meta.showBack"
-            to=".."
+            :to="$route.meta.backTo || '..'"
             class="flex items-center gap-1 text-indigo-200 hover:text-indigo-100"
           >
             <ArrowLeftIcon class="size-4" /> Back

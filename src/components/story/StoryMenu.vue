@@ -25,7 +25,6 @@ import StoryVersionHistory from "./StoryVersionHistory.vue";
 const props = defineProps<{
   editor: Editor | undefined;
   story: StoryWithId;
-  templateId?: string;
 }>();
 const isEditable = defineModel<boolean>("isEditable", { required: true });
 
@@ -34,12 +33,7 @@ const showDeletionModal = ref(false);
 const showRegenerateModal = ref(false);
 const showVersionHistoryModal = ref(false);
 const { deleteStory, putItem } = useStories();
-const templateStore = useTemplates();
-
-// Fetch templates if not already loaded
-if (templateStore.items.length === 0) {
-  templateStore.fetchItems();
-}
+const { items: templates } = useTemplates();
 
 const deleteStoryAndNavigate = () => {
   deleteStory(props.story).then(() => {
@@ -61,10 +55,7 @@ const deleteStoryAndNavigate = () => {
   <StoryRegenerateModal
     :story="story"
     :is-open="showRegenerateModal"
-    :template-id="
-      templateId ||
-      (templateStore.items.length > 0 ? templateStore.items[0].id : '')
-    "
+    :template-id="story.templateId || templates[0].id"
     @close="showRegenerateModal = false"
   />
 

@@ -12,16 +12,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { computed, ref, watch } from "vue";
-import {
-  useCollection,
-  useCurrentUser,
-  useDocument,
-  useFirestore,
-} from "vuefire";
+import { useCollection, useDocument, useFirestore } from "vuefire";
 
 import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useProducts } from "@/stores/useProducts";
 import { StoryVersion, StoryVersionWithId, StoryWithId } from "@/types/story";
+
+import { useUser } from "./useUser";
 
 const ITEM_PATH = "stories";
 
@@ -34,12 +31,12 @@ export function useStories() {
   const storyVersions = ref<Record<string, StoryVersionWithId[]>>({});
   const items = ref<StoryWithId[]>([]);
   const db = useFirestore();
-  const currentUser = useCurrentUser();
+  const currentUser = useUser();
   const productStore = useProducts();
 
   // Compute the path to the stories collection based on selected product
   const storiesColPath = computed(() => {
-    const uid = currentUser.value?.uid;
+    const uid = currentUser.user?.uid;
     const productId = productStore.selectedItemId;
     const product = productStore.selectedProduct;
 

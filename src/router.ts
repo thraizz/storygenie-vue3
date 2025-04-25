@@ -36,29 +36,37 @@ export const router = createRouter({
       },
     },
     {
-      path: "/templates",
-      component: () => import("./views/templates/Templates.vue"),
-      meta: {
-        title: "Templates",
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/templates/new",
-      component: () => import("./views/templates/CreateTemplate.vue"),
-      meta: {
-        title: "Create Template",
-        showBack: true,
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/templates/:templateId",
-      component: () => import("./views/templates/TemplateView.vue"),
-      meta: {
-        title: "Template",
-        requiresAuth: true,
-      },
+      path: "/templates/",
+      children: [
+        {
+          path: "",
+          component: () => import("./views/templates/Templates.vue"),
+          meta: {
+            title: "Templates",
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "new",
+          component: () => import("./views/templates/CreateTemplate.vue"),
+          meta: {
+            title: "Create Template",
+            showBack: true,
+            backTo: "/templates",
+            requiresAuth: true,
+          },
+        },
+        {
+          path: ":templateId",
+          component: () => import("./views/templates/TemplateView.vue"),
+          meta: {
+            title: "Template Details",
+            showBack: true,
+            backTo: "/templates",
+            requiresAuth: true,
+          },
+        },
+      ],
     },
     {
       path: "/products/",
@@ -79,6 +87,7 @@ export const router = createRouter({
           component: () => import("./views/product/ProductCreation.vue"),
           meta: {
             title: "Create Product",
+            showBack: true,
             requiresAuth: true,
           },
         },

@@ -3,7 +3,8 @@ import { defineProps } from "vue";
 import { RouteLocationRaw } from "vue-router";
 
 type Props = {
-  to: RouteLocationRaw;
+  to?: RouteLocationRaw;
+  disabled?: boolean;
 };
 defineProps<Props>();
 </script>
@@ -13,6 +14,10 @@ defineProps<Props>();
     <slot />
   </router-link>
 
+  <div v-else-if="$props?.disabled" class="base-card disabled">
+    <slot />
+  </div>
+
   <div v-else class="base-card">
     <slot />
   </div>
@@ -21,5 +26,9 @@ defineProps<Props>();
 <style>
 .base-card {
   @apply overflow-hidden rounded-xl border border-gray-200 transition hover:shadow-lg;
+}
+
+.base-card.disabled {
+  @apply opacity-50 hover:shadow-none;
 }
 </style>

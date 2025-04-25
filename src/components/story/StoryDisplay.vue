@@ -16,9 +16,8 @@ import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, generateHTML, useEditor } from "@tiptap/vue-3";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
-import { useTemplates } from "@/stores/useTemplates";
 import { StoryWithId } from "@/types/story";
 
 import StoryMenu from "./StoryMenu.vue";
@@ -26,16 +25,6 @@ import StoryMenu from "./StoryMenu.vue";
 const props = defineProps<{
   story: StoryWithId;
 }>();
-
-const templateStore = useTemplates();
-// Initialize with the first template if needed
-if (templateStore.items.length === 0) {
-  templateStore.fetchItems();
-}
-
-const templateId = computed(() => {
-  return templateStore.items.length > 0 ? templateStore.items[0].id : "";
-});
 
 const editor = useEditor({
   content: generateHTML(props.story.content, [
@@ -56,12 +45,7 @@ const isEditable = ref(false);
 </script>
 
 <template>
-  <StoryMenu
-    v-model:is-editable="isEditable"
-    :editor="editor"
-    :story="story"
-    :template-id="templateId"
-  />
+  <StoryMenu v-model:is-editable="isEditable" :editor="editor" :story="story" />
 
   <div v-if="editor" class="flex flex-col gap-4">
     <div class="editor">

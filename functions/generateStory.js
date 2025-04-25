@@ -61,9 +61,11 @@ exports.generateStory = onCall(async (request) => {
     .doc(productId)
     .collection("stories")
     .add({
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
       content: storyAsTipTapDoc,
       prompt: request.data.description,
-      updatedAt: FieldValue.serverTimestamp(),
+      templateId: request.data?.templateId,
       promptVersion: PROMPT_VERSION,
     });
 

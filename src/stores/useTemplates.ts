@@ -1,87 +1,87 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
-  getDocs,
-  setDoc,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { useCollection, useFirestore } from "vuefire";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
-import { db } from "@/firebase";
 import { ROOT_USERDATA_COLLECTION } from "@/firebase_constants";
 import { useUser } from "@/stores/useUser";
 import { Template, TemplateWithId } from "@/types/templates";
 
 const ITEM_PATH = "templates";
 
-export const useTemplates = defineStore(ITEM_PATH, () => {
-  const items = ref<TemplateWithId[]>([]);
-  const userStore = useUser();
+export function useTemplates() {
+  const isLoading = ref(false);
+  const db = useFirestore();
+  const { user } = useUser();
 
   const selectedItemId = useSelectedProductId();
 
-  const uuid = computed(() => userStore.user?.uid);
+  const uuid = computed(() => user?.uid);
 
-  const fetchItems = async () => {
-    if (!userStore.user?.uid) return;
-    const itemsCollection = collection(
-      db,
-      ROOT_USERDATA_COLLECTION,
-      userStore.user.uid,
-      ITEM_PATH,
-    );
-    const itemsSnapshot = await getDocs(itemsCollection);
-    const itemsList = (await itemsSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }))) as TemplateWithId[];
+  // Compute path to templates collection
+  const templatesColPath = computed(() => {
+    if (!uuid.value) return null;
 
-    items.value = itemsList;
-  };
-  // useRefetchOnAuthChange(fetchItems);
+    return `${ROOT_USERDATA_COLLECTION}/${uuid.value}/${ITEM_PATH}`;
+  });
+
+  const collectionRef = computed(() => {
+    if (!uuid.value || !templatesColPath.value) return null;
+
+    return collection(db, templatesColPath.value);
+  });
+
+  const items = useCollection(collectionRef);
 
   const setAttributeOfItem = async (item: TemplateWithId, text: string) => {
-    if (uuid.value === undefined) return;
+    if (!templatesColPath.value || !uuid.value) return;
 
-    await updateDoc(
-      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
-      {
-        text,
-      },
-    );
-    await fetchItems();
+    await updateDoc(doc(db, templatesColPath.value, item.id), {
+      text,
+      updatedAt: Timestamp.now(),
+    });
   };
 
   const putItem = async (item: TemplateWithId) => {
-    if (uuid.value === undefined) return;
+    if (!templatesColPath.value || !uuid.value) return;
 
-    await setDoc(
-      doc(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH, item.id),
-      item,
-    );
-    await fetchItems();
+    await updateDoc(doc(db, templatesColPath.value, item.id), {
+      ...item,
+      updatedAt: Timestamp.now(),
+    });
   };
 
   const postItem = async (item: Template) => {
-    if (uuid.value === undefined) return;
+    if (!templatesColPath.value || !uuid.value) return;
 
-    await addDoc(
-      collection(db, ROOT_USERDATA_COLLECTION, uuid.value, ITEM_PATH),
-      item,
-    );
-    await fetchItems();
+    await addDoc(collection(db, templatesColPath.value), {
+      ...item,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+  };
+
+  const deleteItem = async (item: TemplateWithId) => {
+    if (!templatesColPath.value || !uuid.value) return;
+
+    await deleteDoc(doc(db, templatesColPath.value, item.id));
   };
 
   return {
     setAttributeOfItem,
     putItem,
     postItem,
+    deleteItem,
     items,
-    fetchItems,
+    isLoading,
     selectedItemId,
     key: ITEM_PATH,
   };
-});
+}

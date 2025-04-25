@@ -12,8 +12,7 @@ type FormSchema = {
   description: string;
 };
 
-const templateStore = useTemplates();
-templateStore.fetchItems();
+const { postItem } = useTemplates();
 const formSchema = {
   name: string().required("Name is required."),
   description: string().required("Instruction is required."),
@@ -26,7 +25,7 @@ const isLoading = ref(false);
 const router = useRouter();
 const onSubmit = handleSubmit(async (values: FormSchema) => {
   isLoading.value = true;
-  await templateStore.postItem(values);
+  await postItem(values);
   isLoading.value = false;
   router.push("/templates");
 });

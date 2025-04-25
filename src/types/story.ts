@@ -7,6 +7,7 @@ export type Story = {
   jiraIssueID?: string;
   latestFeedback?: string;
   promptVersion?: number;
+  templateId?: string;
 };
 
 export type StoryVersion = Story & {

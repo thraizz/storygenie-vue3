@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useTemplates } from "@/stores/useTemplates";
@@ -7,13 +7,10 @@ import { useTemplates } from "@/stores/useTemplates";
 const route = useRoute();
 const templateId = route.params.templateId;
 
-const templateStore = useTemplates();
-onMounted(() => {
-  templateStore.fetchItems();
-});
+const { items: templates } = useTemplates();
 
 const template = computed(() =>
-  templateStore.items.find((item) => item.id === templateId),
+  templates.value.find((template) => template.id === templateId),
 );
 </script>
 

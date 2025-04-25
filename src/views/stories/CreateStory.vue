@@ -35,7 +35,7 @@ const { handleSubmit } = useForm<FormData>({
   validationSchema: formSchema,
 });
 
-const templateStore = useTemplates();
+const { items: templates } = useTemplates();
 // Template store should already load automatically via the useCollection setup
 const { user } = useUser();
 const selectedProductId = useSelectedProductId();
@@ -90,7 +90,7 @@ const onSubmit = handleSubmit(
       <Field v-slot="{ value, handleChange }" name="template">
         <BaseDropdown
           id="template"
-          :options="templateStore.items"
+          :options="templates"
           :display-value="(item) => item.name"
           label="Select a template"
           :model-value="value"
