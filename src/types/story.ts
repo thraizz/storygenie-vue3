@@ -5,9 +5,17 @@ export type Story = {
   updatedAt: Timestamp;
   content: Doc;
   jiraIssueID?: string;
+  latestFeedback?: string;
+  promptVersion?: number;
+};
+
+export type StoryVersion = Story & {
+  versionCreatedAt: Timestamp;
 };
 
 export type StoryWithId = Story & { id: string };
+
+export type StoryVersionWithId = StoryVersion & { id: string };
 
 type Content = {
   attrs?: {

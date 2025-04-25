@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import ProductCard from "@/components/product/ProductCard.vue";
 import { useProducts } from "@/stores/useProducts";
-import { useStories } from "@/stores/useStories";
 
 const productStore = useProducts();
 productStore.fetchIfEmpty();
-
-const storyStore = useStories();
-storyStore.items = [];
 </script>
 
 <template>

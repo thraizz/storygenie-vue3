@@ -19,7 +19,11 @@ const router = useRouter();
     :display-value="(item: any) => (item ? item.name : '')"
     placeholder="Select a product"
     @update:model-value="
-      (value: ProductWithId) => router.push(`/products/${value.id}`)
+      (value) => {
+        if (value) {
+          router.push(`/products/${(value as ProductWithId).id}`);
+        }
+      }
     "
   />
 </template>

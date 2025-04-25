@@ -9,7 +9,7 @@ import {
 import { defineProps } from "vue";
 
 // Define component props
-const props = defineProps({
+defineProps({
   tabs: {
     type: Array as () => Array<{ label: string; value: string }>,
     required: true,

@@ -1,29 +1,21 @@
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  User,
-  UserCredential,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, UserCredential } from "firebase/auth";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed } from "vue";
+import { useCurrentUser } from "vuefire";
 
-import { app, auth } from "@/firebase";
+import { auth } from "@/firebase";
 
 export const userNavigation = [{ name: "Settings", href: "/settings" }];
 
-// User firebase to receive current user and autheticaiton status.
+// User store that leverages VueFire for authentication
 export const useUser = defineStore("user", () => {
-  const user = ref<User | null>(null);
-  const isLoggedIn = ref(false);
-
-  const auth = getAuth(app);
-  auth.onAuthStateChanged((u) => {
-    user.value = u;
-    isLoggedIn.value = !!u && !u.isAnonymous;
-  });
+  const firebaseUser = useCurrentUser();
+  const isLoggedIn = computed(
+    () => !!firebaseUser.value && !firebaseUser.value.isAnonymous,
+  );
 
   return {
-    user,
+    user: firebaseUser,
     isLoggedIn,
   };
 });
@@ -32,7 +24,6 @@ export const logInWithFirebase: (
   email: string,
   password: string,
 ) => Promise<void | UserCredential> = async (email, password) => {
-  const auth = getAuth(app);
   try {
     return signInWithEmailAndPassword(auth, email, password);
   } catch (error) {

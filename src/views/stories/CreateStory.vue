@@ -9,7 +9,6 @@ import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { functions } from "@/firebase";
 import { router } from "@/router";
-import { useStories } from "@/stores/useStories";
 import { useTemplates } from "@/stores/useTemplates";
 import { useUser } from "@/stores/useUser";
 import { TemplateWithId } from "@/types/templates";
@@ -36,9 +35,8 @@ const { handleSubmit } = useForm<FormData>({
   validationSchema: formSchema,
 });
 
-const storyStore = useStories();
 const templateStore = useTemplates();
-templateStore.fetchItems();
+// Template store should already load automatically via the useCollection setup
 const { user } = useUser();
 const selectedProductId = useSelectedProductId();
 
@@ -58,7 +56,6 @@ const onSubmit = handleSubmit(
       description: values.description,
     })
       .then(async (result: any) => {
-        await storyStore.fetchItems();
         router.push(
           `/products/${selectedProductId.value}/story/${result.data?.result}`,
         );

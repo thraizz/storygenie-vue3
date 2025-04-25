@@ -1,25 +1,18 @@
 <script setup lang="ts">
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
-import { computed } from "vue";
 
 import { useSelectedProductId } from "@/composables/useSelectedProduct";
 import { useStories } from "@/stores/useStories";
 import { getHeadlineFromDoc } from "@/types/story";
-const storyStore = useStories();
-storyStore.fetchIfEmpty();
+const { items, isLoading } = useStories();
 
 const selectedProductId = useSelectedProductId();
-const items = computed(() => storyStore.items);
 </script>
 
 <template>
-  <p v-if="storyStore.isLoading">Loading stories...</p>
+  <p v-if="isLoading">Loading stories...</p>
 
-  <ul
-    v-else-if="storyStore.items.length > 0"
-    role="list"
-    class="divide-y divide-gray-100"
-  >
+  <ul v-else-if="items.length > 0" role="list" class="divide-y divide-gray-100">
     <li
       v-for="item in items"
       :key="item.id"

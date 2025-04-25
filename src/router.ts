@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
-import { auth } from "./firebase";
-import { useUser } from "./stores/useUser";
+import { getCurrentUser } from "vuefire";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -160,16 +158,15 @@ export const router = createRouter({
 });
 
 const protectedRoutes: string[] = [];
-router.beforeEach((to, from, next) => {
-  auth.authStateReady().then(() => {
-    const { isLoggedIn } = useUser();
-    if (
-      (to.meta.requiresAuth || protectedRoutes.includes(to.path)) &&
-      !isLoggedIn
-    ) {
-      next("/login");
-    } else {
-      next();
-    }
-  });
+router.beforeEach(async (to, from, next) => {
+  const currentUser = await getCurrentUser();
+
+  if (
+    (to.meta.requiresAuth || protectedRoutes.includes(to.path)) &&
+    !currentUser
+  ) {
+    next("/login");
+  } else {
+    next();
+  }
 });

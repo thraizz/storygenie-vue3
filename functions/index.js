@@ -4,6 +4,9 @@ admin.initializeApp();
 
 exports.generatestory = require("./generateStory").generateStory;
 
+// New function for regenerating stories
+exports.regeneratestory = require("./regenerateStory").regenerateStory;
+
 // Initialize default data for new users
 exports.usercreationhook = require("./createUserHook").createUserHook;
 
